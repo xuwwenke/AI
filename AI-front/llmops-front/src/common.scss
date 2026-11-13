@@ -1,0 +1,88 @@
+//--- 公共样式 ---//
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+	padding: 0;
+  font-size:100%;
+}
+
+textarea {
+  font-family: inherit;
+}
+
+ul,ol { margin: 0; padding: 0; list-style: none }
+
+a,a:hover { text-decoration: none }
+a,a:visited { color: #409eff }
+a:hover { color: #66b1ff }
+a:active { color: #3a8ee6 }
+
+hr {
+  margin: 10px 0;
+  border: none;
+  border-bottom: 1px solid #d9dfe6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+// 父容器被浮动元素撑开
+.cb:after { content: ''; display: table; clear: both; }
+.cb { *zoom: 1; }
+
+.hidden { display: none }
+
+.fl { float: left }
+.fr { float: right }
+.tal { text-align: left !important }
+.tac { text-align: center !important }
+.tar { text-align: right !important }
+.vam { vertical-align: middle }
+
+// 文本超长省略
+.ellip {
+  // 可能需要另外设置 block (或 inline-block) 和 width (或 max-width)
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// full width
+.fw { width: 100% }
+// full height
+.fh { height: 100% }
+
+.mt5 { margin-top: 5px }
+.mb5 { margin-bottom: 5px }
+.ml5 { margin-left: 5px }
+.mr5 { margin-right: 5px }
+.mt10 { margin-top: 10px }
+.mb10 { margin-bottom: 10px }
+.ml10 { margin-left: 10px }
+.mr10 { margin-right: 10px }
+.mt20 { margin-top: 20px }
+.mb20 { margin-bottom: 20px }
+.ml20 { margin-left: 20px }
+.mr20 { margin-right: 20px }
+
+.p10 { padding: 10px }
+.p20 { padding: 20px }
+
+.cp { cursor: pointer }
+.cm { cursor: move }
+
+// icon-font symbol 引用
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}

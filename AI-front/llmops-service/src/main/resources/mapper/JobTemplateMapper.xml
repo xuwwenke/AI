@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.JobTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.JobTemplate">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="project_id" property="projectId" />
+        <result column="name" property="name" />
+        <result column="version" property="version" />
+        <result column="images_id" property="imagesId" />
+        <result column="host_aliases" property="hostAliases" />
+        <result column="describe" property="describe" />
+        <result column="workdir" property="workdir" />
+        <result column="entrypoint" property="entrypoint" />
+        <result column="args" property="args" />
+        <result column="env" property="env" />
+        <result column="volume_mount" property="volumeMount" />
+        <result column="privileged" property="privileged" />
+        <result column="accounts" property="accounts" />
+        <result column="demo" property="demo" />
+        <result column="expand" property="expand" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, project_id, name, version, images_id, host_aliases, `describe`, workdir, entrypoint, args, env, volume_mount, privileged, accounts, demo, expand, created_by_fk, changed_by_fk
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.dto.JobTemplateDTO">
+        SELECT
+        j.id, 
+        pr.name as project, 
+        j.name, 
+        j.version,
+        a.nickname as creator,
+        am.nickname as modifier,
+        DATE_FORMAT(j.changed_on, '%Y-%m-%d %H:%i:%s') as modified,
+        j.expand,
+        i.name as imageName
+        FROM job_template j
+        LEFT JOIN project pr ON j.project_id = pr.id
+        LEFT JOIN ab_user a ON j.created_by_fk = a.id
+        LEFT JOIN ab_user am ON j.changed_by_fk = am.id
+        LEFT JOIN images i ON j.images_id = i.id
+        <where>
+            <choose>
+                <when test="bizProjectId != null">
+                    AND j.biz_project_id = #{bizProjectId}
+                </when>
+                <otherwise>
+                    AND j.biz_project_id = 1
+                </otherwise>
+            </choose>
+            <if test="projectId != null">
+                AND j.project_id = #{projectId}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+            <if test="modifier != null and modifier != ''">
+                AND am.nickname LIKE CONCAT('%', #{modifier}, '%')
+            </if>
+            <if test="version != null and version != ''">
+                AND j.version LIKE CONCAT('%', #{version}, '%')
+            </if>
+            <if test="imagesId != null">
+                AND j.images_id = #{imagesId}
+            </if>
+        </where>
+        ORDER BY j.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(DISTINCT j.id)
+        FROM job_template j
+        LEFT JOIN project pr ON j.project_id = pr.id
+        LEFT JOIN ab_user a ON j.created_by_fk = a.id
+        LEFT JOIN ab_user am ON j.changed_by_fk = am.id
+        <where>
+            <choose>
+                <when test="bizProjectId != null">
+                    AND j.biz_project_id = #{bizProjectId}
+                </when>
+                <otherwise>
+                    AND j.biz_project_id = 1
+                </otherwise>
+            </choose>
+            <if test="projectId != null">
+                AND j.project_id = #{projectId}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+            <if test="modifier != null and modifier != ''">
+                AND am.nickname LIKE CONCAT('%', #{modifier}, '%')
+            </if>
+            <if test="version != null and version != ''">
+                AND j.version LIKE CONCAT('%', #{version}, '%')
+            </if>
+            <if test="imagesId != null">
+                AND j.images_id = #{imagesId}
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="getDetailsById" resultType="com.eversec.llmops.service.entity.JobTemplate">
+        SELECT
+        j.*,
+        pr.name as project,
+        i.name as image
+        FROM job_template j
+        LEFT JOIN project pr ON j.project_id = pr.id
+        LEFT JOIN images i ON j.images_id = i.id
+        where j.id=#{id}
+    </select>
+
+
+
+    <select id="list" resultType="com.eversec.llmops.service.dto.JobTemplateDTO">
+        SELECT
+        j.id,
+        j.`describe` as `describe`,
+        pr.name as project,
+        j.name,
+        j.version,
+        j.expand,
+        i.name as imageName
+        FROM job_template j
+        LEFT JOIN project pr ON j.project_id = pr.id
+        LEFT JOIN images i ON j.images_id = i.id
+        <where>
+          j.biz_project_id in (1, #{bizProjectId})
+
+        </where>
+        ORDER BY j.id DESC
+
+    </select>
+</mapper>

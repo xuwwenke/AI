@@ -1,0 +1,16 @@
+.el-alert__content {
+  display: inline-block;
+}
+
+.el-date-editor .el-range-input, .el-date-editor .el-range-separator {
+  vertical-align: top;
+}
+
+// 配合指令 v-iePlaceholder
+.ie-placeholder{
+  position: absolute;
+  padding-left: 15px;
+  font-size: 13px;
+  color: #888;
+  pointer-events: none;
+}

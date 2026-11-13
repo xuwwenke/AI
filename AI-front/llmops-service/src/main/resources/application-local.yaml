@@ -1,0 +1,21 @@
+DATABASE_HOST: 192.168.75.239
+DATABASE_PORT: 30511
+DATABASE_USERNAME: root
+DATABASE_PASSWORD: admin
+SYSTEM_DATABASE_HOST: cloud.everoffice.cn
+SYSTEM_DATABASE_PORT: 30363
+
+
+infra:
+  host: http://192.168.75.239:32639
+eureka:
+  client:
+    enabled: false
+    registerWithEureka: false
+PROMETHEUS_HOST: http://192.168.75.239:51628
+
+
+
+
+REDIS_HOST: 10.0.15.136
+REDIS_PORT: 32682

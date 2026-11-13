@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.RepositoryMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Repository">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="name" property="name" />
+        <result column="server" property="server" />
+        <result column="user" property="user" />
+        <result column="password" property="password" />
+        <result column="hubsecret" property="hubsecret" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, name, server, user, password, hubsecret, created_by_fk, changed_by_fk
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.entity.Repository">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM repository
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="server != null and server != ''">
+                AND server LIKE CONCAT('%', #{server}, '%')
+            </if>
+            <if test="user != null and user != ''">
+                AND user LIKE CONCAT('%', #{user}, '%')
+            </if>
+            <if test="hubsecret != null and hubsecret != ''">
+                AND hubsecret LIKE CONCAT('%', #{hubsecret}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM repository
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="server != null and server != ''">
+                AND server LIKE CONCAT('%', #{server}, '%')
+            </if>
+            <if test="user != null and user != ''">
+                AND user LIKE CONCAT('%', #{user}, '%')
+            </if>
+            <if test="hubsecret != null and hubsecret != ''">
+                AND hubsecret LIKE CONCAT('%', #{hubsecret}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询所有仓库的id和name -->
+    <select id="selectIdAndName" resultType="com.eversec.llmops.service.dto.RepositoryNameDTO">
+        SELECT id, name
+        FROM repository
+        ORDER BY id DESC
+    </select>
+</mapper>

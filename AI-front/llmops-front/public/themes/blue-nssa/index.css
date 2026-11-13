@@ -1,0 +1,266 @@
+:root {
+  /* 网站框架 */
+  --site-header-bg: transparent;
+  --site-header-txt: #fff;
+  --site-main-content-bg: #fff;
+  --site-footer-bg: white;
+  --site-footer-txt: #333;
+  --site-menu-bg: #fff;
+  --site-menu-txt: #595F7B;
+  --site-menu-hover-bg: #F1F5FF;
+  --site-menu-hover-txt: #2F304D;
+  --site-menu-active-bg: #436BD9;
+  --site-menu-active-txt: #fff;
+  --site-menu-assist-txt: #909399;
+  --site-sub-menu-bg: rgba(255,255,255,.95);
+  --site-sub-menu2-bg: white;
+  --site-tabs-bg: #436BD9;
+  --site-tabs-txt: white;
+  --site-tabs-hover-bg: #345BC4;
+  --site-tabs-hover-txt: white;
+  --site-tabs-active-bg: white;
+  --site-tabs-active-txt: #333;
+  /* 子元素：卡片，表格，菜单等 */
+  --sub-bg: rgba(255, 255, 255, 0.9);
+  --sub-txt: #3F405D;
+  --sub-border: #dcdfe6;
+  --sub-hover-bg: rgba(247, 248, 252, .8);
+  --sub-hover-txt: #3F405D;
+  --sub-active-bg: #d3e8ff;
+  --sub-active-txt: #333;
+  /* 弹窗 */
+  --pop-bg: white;
+  --pop-txt: #333;
+  --pop-border: #E4E7ED;
+  --pop-hover-bg: #ecf5ff;
+  --pop-hover-txt: #409eff;
+  --pop-hover-border: transparent;
+  --pop-active-bg: #ecf5ff;
+  --pop-active-txt: #2949A3;
+  --pop-active-border: transparent;
+  /* 对话框 */
+  --dialog-bg: white;
+  --dialog-txt: #3F405D;
+  /* 辅助 */
+  --assist-bg: #fff;
+  --assist-txt: #808191;
+  --assist-border: #E1E3ED;
+  /* 日期范围 */
+  --range-bg: #f2f6fc;
+  /* 主要色 */
+  --default-bg: white;
+  --default-txt: #606266;
+  --default-border: #dcdfe6;
+  --default-hover-bg: #ecf5ff;
+  --default-hover-txt: #409eff;
+  --default-hover-border: #c6e2ff;
+  --default-active-bg: white;
+  --default-active-txt: #3a8ee6;
+  --default-active-border: #3a8ee6;
+  --default-disabled-bg: #f5f7fa;
+  --default-disabled-txt: #9c9c9c;
+  --default-disabled-border: #ebeef5;
+
+  --primary-bg: #436BD9;
+  --primary-txt: white;
+  --primary-border: #436BD9;
+  --primary-hover-bg: #345BC4;
+  --primary-hover-txt: white;
+  --primary-hover-border: #345BC4;
+  --primary-active-bg: #2949A3;
+  --primary-active-txt: white;
+  --primary-active-border: #2949A3;
+  --primary-disabled-bg: #E1E3ED;
+  --primary-disabled-txt: #B0B0BC;
+  --primary-disabled-border: #E1E3ED;
+}
+
+.site-root > .el-container {
+  background: #F7F8FC url(./bg_top.png) no-repeat center top;
+  background-size: 100% auto;
+}
+
+.site-top {
+  font-size: 14px
+}
+
+.site-header {
+  height: 60px !important;
+  line-height: 60px !important;
+  padding: 0 20px !important;
+  box-shadow: var(--main-header-shadow);
+}
+
+.site-header .site-top .app-select {
+  height: 32px;
+  line-height: 32px !important;
+}
+
+.site-header .site-top .app-btn {
+  margin: 0 2px;
+  border-radius: 5px;
+}
+
+.site-header .site-top .app-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.site-header .site-top .app-btn.selected {
+  background: var(--pop-active-bg);
+  color: var(--primary-bg);
+}
+
+.site-container {
+  height: calc(100% - 60px) !important;
+  padding: 0 20px 20px 20px;
+}
+.site-container > .el-header {
+  padding-bottom: 10px !important;
+  background: transparent;
+  box-shadow: none;
+}
+
+.site-aside {
+  margin-right: 24px;
+  border-radius: 10px;
+}
+
+.site-aside .scroll-wrapper {
+  padding: 20px;
+  border-radius: 10px;
+  transition: padding .3s;
+}
+
+.site-aside .site-menu .el-submenu__title,
+.site-aside .site-menu .el-menu-item,
+.site-aside .site-menu-custom > ul > li {
+  margin: 4px 0;
+  border-radius: 8px;
+  height: 48px;
+  line-height: 48px;
+}
+
+.site-aside .site-menu .el-submenu {
+  margin: 4px 0;
+}
+
+.site-aside .site-menu li::before {
+  width: 0 !important;
+}
+
+.site-aside .site-menu-custom > ul > li:hover .icon {
+  color: var(--primary-bg);
+}
+
+.site-aside .site-menu .el-menu-item.is-active,
+.site-aside .site-menu-custom > ul > li.active {
+  box-shadow: 0px 6px 10px rgba(67, 107, 217, 0.3);
+}
+
+.site-aside .site-menu-custom > ul > li.active .icon {
+  color: var(--site-menu-active-txt);
+}
+
+.site-aside.collapse .scroll-wrapper {
+  padding: 20px 8px;
+}
+
+.site-aside.collapse .site-menu-custom > ul > li {
+  width: 48px;
+  height: 48px;
+  padding: 0 12px;
+}
+
+.site-aside.collapse .el-menu-item,
+.site-aside.collapse .el-submenu__title,
+.site-aside.collapse .el-tooltip {
+  padding: 0 12px !important;
+}
+
+.site-main {
+  padding: 0 !important;
+}
+
+.site-main .page-title.is-main {
+  height: 24px;
+  line-height: 1;
+  padding: 0 !important;
+  border: none;
+}
+.site-main .page-title.is-main .el-breadcrumb {
+  line-height: 1;
+}
+.site-main .page-title.is-main .el-breadcrumb__inner,
+.site-main .page-title.is-main .el-breadcrumb__inner:hover,
+.site-main .page-title.is-main a {
+  color: rgba(255, 255, 255, 0.8);
+}
+.site-main .page-title.is-main a:hover {
+  color: #fff;
+}
+
+.site-main .site-main-content {
+  border-radius: 10px;
+}
+
+.site-main.has-title .site-main-content {
+  height: calc(100% - 24px) !important;
+}
+
+.el-table {
+  border-top: 1px solid var(--assist-border);
+}
+
+.el-table,
+.el-table .cell .el-link {
+  font-size: 14px;
+}
+
+.el-table tr {
+  height: 48px;
+}
+
+.el-table tr th.el-table__cell {
+  background: #F7F8FC;
+  color: #808191;
+}
+
+.el-card {
+  border: none;
+  border-radius: 10px !important;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+/*滚动条里面小方块*/
+::-webkit-scrollbar-thumb {
+  /* box-shadow: inset 0 0 4px #ccc; */
+  border-radius: 4px;
+  background: #7A9DFB;
+  /* background: rgba(128, 129, 145, .5); */
+  height: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(67, 107, 217, .8);
+  /* background: rgba(128, 129, 145, .8); */
+  /* box-shadow: inset 0 0 4px #aaa; */
+}
+/*滚动条里面轨道*/
+::-webkit-scrollbar-track {
+  /* background: #F7F8FC; */
+  border: 1px solid rgba(67, 107, 217, 0);
+  background: rgba(67, 107, 217, .2);
+  border-radius: 4px;
+}
+/* ::-webkit-scrollbar-track:hover {
+  background: rgba(150, 150, 150, 0.2);
+  box-shadow: inset 0 0 1px #ccc;
+} */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

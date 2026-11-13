@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.ClusterMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Cluster">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="k8s_server_url" property="k8sServerUrl" />
+        <result column="token" property="token" />
+        <result column="service_ip" property="serviceIp" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+        <result column="operator" property="operator" />
+        <result column="description" property="description" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, k8s_server_url, token, service_ip, createtime, updatetime, operator, description
+    </sql>
+
+</mapper>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <p>二次开发测试页面</p>
+    <button onclick="onCancel()">取消</button>
+    <button onclick="onSubmit()">确定</button>
+    <script>
+      // 发出消息, 通知原页面：当前页已加载（被 window.open 打开且跨域时必须加）
+      document.referrer &&
+        window.opener &&
+        window.opener.postMessage({ msg: "onLoad" }, document.referrer);
+      // 监听消息
+      window.addEventListener("message", messageHandler);
+      // 消息处理器
+      function messageHandler(event) {
+        // 如果消息源不是父级（iframe 或调用 window.open）
+        if (event.source !== parent && event.source !== window.opener) return;
+        if (event.data.msg == "params") {
+          // 父级会按照默认逻辑传过来参数，如果不需要接收参数，无视即可
+          // 按现有逻辑，参数可能是数组（多选后操作）或者对象（单条记录操作）
+          console.log("demo页接收到params：", event.data.payload, window.location.search);
+        }
+      }
+      function onCancel() {
+        // 关闭父级对话框
+        document.referrer &&
+          parent.postMessage({ msg: "onCancel" }, document.referrer);
+      }
+      function onSubmit() {
+        // 提交数据并关闭父级对话框
+        // payload 传递到父级的数据 { refresh 父级列表刷新 }
+        // payload 可以进行扩展，如：{ refresh: true, myData: xxx }
+        document.referrer &&
+          parent.postMessage(
+            { msg: "onSubmit", payload: { refresh: true } },
+            document.referrer
+          );
+      }
+    </script>
+  </body>
+</html>

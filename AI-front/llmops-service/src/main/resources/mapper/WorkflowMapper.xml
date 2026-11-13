@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.WorkflowMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Workflow">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="namespace" property="namespace" />
+        <result column="create_time" property="createTime" />
+        <result column="status" property="status" />
+        <result column="annotations" property="annotations" />
+        <result column="labels" property="labels" />
+        <result column="spec" property="spec" />
+        <result column="status_more" property="statusMore" />
+        <result column="username" property="username" />
+        <result column="info_json" property="infoJson" />
+        <result column="add_row_time" property="addRowTime" />
+        <result column="foreign_key" property="foreignKey" />
+        <result column="change_time" property="changeTime" />
+        <result column="cluster" property="cluster" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, namespace, create_time, status, annotations, labels, spec, status_more, username, info_json, add_row_time, foreign_key, change_time, cluster
+    </sql>
+
+    <select id="customGetPageList" resultMap="BaseResultMap">
+        SELECT w.id, w.name, w.namespace, w.create_time, w.status, w.annotations, w.labels, w.spec, w.status_more, w.username, w.info_json, w.add_row_time, w.foreign_key, w.change_time, w.cluster
+        FROM workflow w
+        LEFT JOIN project p ON w.namespace = p.name
+        WHERE 1=1
+        <if test="namespace != null and namespace != ''">
+            AND p.name = #{namespace}
+        </if>
+        <if test="status != null and status != ''">
+            AND w.status = #{status}
+        </if>
+        <if test="label != null and label != ''">
+            AND w.labels LIKE CONCAT('%', #{label}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            AND w.name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="username != null and username != ''">
+            AND w.username LIKE CONCAT('%', #{username}, '%')
+        </if>
+        ORDER BY w.add_row_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="customGetTotalCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM workflow w
+        LEFT JOIN project p ON w.namespace = p.name
+        WHERE 1=1
+        <if test="namespace != null and namespace != ''">
+            AND p.name = #{namespace}
+        </if>
+        <if test="status != null and status != ''">
+            AND w.status = #{status}
+        </if>
+        <if test="label != null and label != ''">
+            AND w.labels LIKE CONCAT('%', #{label}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            AND w.name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="username != null and username != ''">
+            AND w.username LIKE CONCAT('%', #{username}, '%')
+        </if>
+    </select>
+
+    <select id="getStatsByNamespace" resultType="com.eversec.llmops.service.dto.WorkflowStatsDTO">
+        SELECT
+            COUNT(*) AS totalCount,
+            COALESCE(SUM(CASE WHEN w.add_row_time <![CDATA[>=]]> #{weekStart} AND w.add_row_time <![CDATA[<=]]> #{weekEnd} THEN 1 ELSE 0 END), 0) AS weekNewCount,
+            COALESCE(SUM(CASE WHEN w.status = 'Running' THEN 1 ELSE 0 END), 0) AS runningCount,
+            COALESCE(SUM(CASE WHEN w.status IN ('Succeeded', 'Deleted') THEN 1 ELSE 0 END), 0) AS completedCount,
+            COALESCE(SUM(CASE WHEN w.status IN ('Failed', 'Error') THEN 1 ELSE 0 END), 0) AS failedCount
+        FROM workflow w
+        LEFT JOIN project p ON w.namespace = p.name
+        WHERE 1=1
+        <if test="namespace != null and namespace != ''">
+            AND p.name = #{namespace}
+        </if>
+    </select>
+
+</mapper>

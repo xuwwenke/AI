@@ -1,0 +1,606 @@
+/* 网站框架 */
+.site-header {
+  background: white !important; /* IE 兼容 */
+  color: #333 !important; /* IE 兼容 */
+  background: var(--site-header-bg) !important;
+  color: var(--site-header-txt) !important;
+}
+.site-header .el-dropdown {
+  color: #333 !important; /* IE 兼容 */
+  color: var(--site-header-txt) !important;
+}
+.site-main .site-main-content {
+  background: var(--site-main-content-bg);
+}
+.site-footer {
+  background: white !important; /* IE 兼容 */
+  color: #333 !important; /* IE 兼容 */
+  background: var(--site-footer-bg) !important;
+  color: var(--site-footer-txt) !important;
+}
+.site-aside {
+  background: #454545 !important; /* IE 兼容 */
+  background: var(--site-menu-bg) !important;
+}
+
+.site-menu.el-menu,
+.site-menu .el-menu-item,
+.site-menu .el-submenu__title,
+.site-menu .el-menu,
+.site-menu .el-submenu .el-menu,
+.site-menu-pop .el-menu,
+.site-menu-pop .el-menu-item,
+.site-menu-pop .el-submenu__title {
+  background: #454545 !important; /* IE 兼容 */
+  color: white !important; /* IE 兼容 */
+  background: var(--site-menu-bg) !important;
+  color: var(--site-menu-txt) !important;
+}
+
+.site-menu .el-menu-item:hover,
+.site-menu .el-submenu__title:hover,
+.site-menu-pop .el-menu-item:hover,
+.site-menu-pop .el-submenu__title:hover {
+  background: #383838 !important; /* IE 兼容 */
+  color: white !important; /* IE 兼容 */
+  background: var(--site-menu-hover-bg) !important;
+  color: var(--site-menu-hover-txt) !important;
+}
+
+.site-menu .el-menu-item.is-active,
+.site-menu.el-menu--horizontal .el-submenu.is-active > .el-submenu__title,
+.site-menu.el-menu--collapse .el-submenu.is-active > .el-submenu__title,
+.site-menu .el-submenu.is-active:not(.is-opened) > .el-submenu__title,
+.site-menu-pop .el-menu-item.is-active,
+.site-menu-pop .el-submenu.is-active > .el-submenu__title {
+  background: #303030 !important; /* IE 兼容 */
+  color: #00b7ff !important; /* IE 兼容 */
+  background: var(--site-menu-active-bg) !important;
+  color: var(--site-menu-active-txt) !important;
+}
+
+.site-menu.el-menu:not(.el-menu--horizontal) .el-menu-item.is-active:before,
+.site-menu-pop.el-menu:not(.el-menu--horizontal)
+  .el-menu-item.is-active:before {
+  background: #00b7ff !important; /* IE 兼容 */
+  background: var(--site-menu-active-txt) !important;
+}
+
+.site-menu.el-menu--horizontal > .el-menu-item.is-active,
+.site-menu.el-menu--horizontal > .el-submenu.is-active > .el-submenu__title {
+  border-color: #00b7ff; /* IE 兼容 */
+  border-color: var(--site-menu-active-txt);
+}
+
+.site-menu .el-submenu__title i,
+.site-menu-pop .el-submenu__title i {
+  color: #909399; /* IE 兼容 */
+  color: var(--site-menu-assist-txt);
+}
+
+.site-tabs > .el-tabs__header,
+.site-tabs > .el-tabs__header .el-tabs__nav .el-tabs__item,
+.site-tabs > .el-tabs__content .tabs-tools .el-button {
+  background: #646464; /* IE 兼容 */
+  color: white; /* IE 兼容 */
+  background: var(--site-tabs-bg);
+  color: var(--site-tabs-txt);
+}
+
+.site-tabs > .el-tabs__header .el-tabs__nav .el-tabs__item:hover,
+.site-tabs > .el-tabs__content .tabs-tools .el-button:hover {
+  background: #505050; /* IE 兼容 */
+  color: white; /* IE 兼容 */
+  background: var(--site-tabs-hover-bg);
+  color: var(--site-tabs-hover-txt);
+}
+
+.site-tabs > .el-tabs__header .el-tabs__nav .el-tabs__item.is-active {
+  background: white; /* IE 兼容 */
+  color: #333; /* IE 兼容 */
+  background: var(--site-tabs-active-bg);
+  color: var(--site-tabs-active-txt);
+}
+
+.site-tabs.el-tabs > .el-tabs__header.is-top,
+.site-tabs.el-tabs > .el-tabs__header.is-top > .el-tabs__nav-wrap.is-top {
+  border-radius: 0;
+}
+
+/* 辅助文字 */
+label,
+.el-form-item__label,
+.el-tabs__item,
+.el-cascader__label,
+.el-picker-panel__icon-btn,
+.el-date-picker__header-label,
+.el-date-table th {
+  color: var(--assist-txt);
+}
+/* 旧 */
+.el-table--striped .el-table__body tr.el-table__row--striped td,
+/* 新 */
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  /* 放在前面，使优先级比hover低 */
+  background: var(--assist-bg);
+}
+
+/* 子元素：卡片，表格，菜单等 */
+.el-aside,
+.el-pagination,
+.el-pagination__total,
+.el-pagination__jump,
+.el-radio,
+.el-checkbox,
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a,
+.el-breadcrumb__inner.is-link,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+  color: var(--sub-txt);
+}
+
+.el-pagination .btn-next,
+.el-pagination .btn-prev,
+.el-pager li.btn-quicknext,
+.el-pager li.btn-quickprev,
+.el-image__error,
+.el-image__placeholder {
+  background: var(--sub-bg);
+  color: var(--assist-txt);
+}
+
+.el-pager li {
+  background: var(--sub-bg);
+}
+
+/* .el-loading-mask, */
+.el-tag--plain {
+  background: var(--sub-bg) !important;
+}
+
+.el-header,
+.el-menu,
+.el-menu-item,
+.el-submenu__title,
+.el-submenu .el-menu,
+.el-input-group__append,
+.el-input-group__prepend,
+.el-input__inner,
+.el-carousel__mask,
+.el-cascader-menu,
+.el-cascader-menu__item.is-disabled:hover,
+.el-collapse-item__header,
+.el-collapse-item__wrap,
+.el-date-editor .el-range-input,
+.el-date-editor .el-range-separator,
+.el-table,
+.el-table__expanded-cell,
+/* 旧 */
+.el-table th,
+/* 新 */
+.el-table th.el-table__cell,
+.el-table tr,
+.el-card,
+.el-tree,
+.el-tabs--border-card,
+.el-tabs--border-card > .el-tabs__header,
+.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
+.el-textarea__inner {
+  background: var(--sub-bg);
+  color: var(--sub-txt);
+}
+
+.el-input__inner,
+.el-input-group__append,
+.el-input-group__prepend,
+.el-textarea__inner,
+.el-card,
+.el-card__header {
+  border-color: var(--sub-border);
+}
+
+.el-menu-item:hover,
+.el-submenu__title:hover,
+.el-tree-node__content:hover,
+/* 旧 */
+.el-table__body tr.hover-row > td,
+.el-table__body tr.hover-row.el-table__row--striped > td,
+.el-table--enable-row-hover .el-table__body tr:hover > td,
+.el-table--striped .el-table__body tr.el-table__row--striped:hover > td,
+/* 新 */
+.el-table__body tr.hover-row > td.el-table__cell,
+.el-table__body tr.hover-row.el-table__row--striped > td.el-table__cell,
+.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell,
+.el-table--striped .el-table__body tr.el-table__row--striped:hover > td.el-table__cell {
+  background: var(--sub-hover-bg);
+  color: var(--sub-hover-txt);
+}
+
+.el-menu .el-menu-item.is-active,
+.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content,
+.el-tree-node:focus > .el-tree-node__content,
+/* 旧 */
+.el-table__body tr.current-row > td,
+.el-table__body tr.hover-row.current-row > td,
+.el-table__body tr.hover-row.el-table__row--striped.current-row > td,
+.el-table--enable-row-hover .el-table__body tr.current-row:hover > td,
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row > td,
+/* 新 */
+.el-table__body tr.current-row > td.el-table__cell,
+.el-table__body tr.hover-row.current-row > td.el-table__cell,
+.el-table__body tr.hover-row.el-table__row--striped.current-row > td.el-table__cell,
+.el-table--enable-row-hover .el-table__body tr.current-row:hover > td.el-table__cell,
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row > td.el-table__cell {
+  background: var(--sub-active-bg);
+  color: var(--sub-active-txt);
+}
+
+.el-table,
+/* 旧 */
+.el-table--border td,
+.el-table--border th,
+.el-table td,
+.el-table th.is-leaf,
+/* 新 */
+.el-table--border td.el-table__cell,
+.el-table--border th.el-table__cell,
+.el-table td.el-table__cell,
+.el-table th.el-table__cell.is-leaf,
+.el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
+  border-color: var(--assist-border);
+}
+
+.el-table--border::after,
+.el-table--group::after,
+.el-table::before {
+  background: var(--assist-border);
+}
+
+/* 弹窗 */
+.el-dropdown,
+.el-select-dropdown__item,
+.el-dropdown-menu__item,
+.el-cascader-menu__item,
+.el-time-spinner__item.active:not(.disabled),
+.el-time-spinner__item,
+.el-picker-panel__shortcut {
+  color: var(--pop-txt);
+}
+
+.el-menu--vertical .el-menu,
+.el-menu--horizontal .el-menu,
+.el-select-dropdown,
+.el-dropdown-menu,
+.el-picker-panel,
+.el-cascader-menus, /* 旧版 */
+.el-cascader__dropdown,
+.el-popover,
+.el-time-panel,
+.el-picker-panel__sidebar {
+  background: var(--pop-bg);
+  color: var(--pop-txt);
+  border-color: var(--pop-border);
+}
+
+.el-popper[x-placement^=bottom] .popper__arrow {
+  border-bottom-color: var(--pop-border);
+}
+.el-popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: var(--pop-bg);
+}
+.el-select .el-input .el-select__caret {
+  color: var(--pop-border);
+}
+
+.el-picker-panel__footer {
+  background: none;
+}
+
+.el-dropdown-menu__item--divided:before {
+  background: var(--pop-bg);
+}
+
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover,
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover,
+.el-dropdown-menu__item:not(.is-disabled):hover,
+.el-cascader-menu__item:focus:not(:active), /* 旧版 */
+.el-cascader-menu__item:hover, /* 旧版 */
+.el-cascader-node:not(.is-disabled):focus,
+.el-cascader-node:not(.is-disabled):hover,
+.el-time-spinner__item:hover:not(.disabled):not(.active),
+.time-select-item:hover {
+  background: var(--pop-hover-bg);
+  color: var(--pop-hover-txt);
+}
+
+.el-select-dropdown__item.selected,
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected,
+.el-cascader-menu__item.is-active, /* 旧版 */
+.el-cascader-node.in-active-path,
+.el-cascader-node.is-selectable.in-active-path,
+.el-cascader-node.is-active,
+.el-cascader-node.is-selectable.in-checked-path {
+  background: var(--pop-active-bg);
+  color: var(--pop-active-txt);
+}
+
+/* 对话框 */
+.el-dialog,
+.el-drawer,
+.el-message-box {
+  background: var(--dialog-bg);
+  color: var(--dialog-txt);
+}
+
+.el-dialog__title,
+.el-drawer__header,
+.el-message-box__title {
+  color: var(--dialog-txt);
+}
+
+.el-dialog__body,
+.el-message-box__content,
+.el-drawer__body .el-message-box__content {
+  color: var(--dialog-txt);
+}
+
+/* 主要色 */
+.el-button.el-button--default:not(.is-plain),
+.el-radio-button__inner,
+.el-radio-button:first-child .el-radio-button__inner {
+  background: var(--default-bg);
+  color: var(--default-txt);
+  border-color: var(--default-border);
+}
+
+.el-input-group__append button.el-button,
+.el-input-group__prepend button.el-button {
+  background: transparent !important;
+  color: inherit !important;
+  border-color: transparent !important;
+}
+
+.el-button.el-button--default:not(.is-plain):hover,
+.el-button.el-button--default:not(.is-plain):focus {
+  background: var(--default-hover-bg);
+  color: var(--default-hover-txt);
+  border-color: var(--default-hover-border);
+}
+
+.el-button.el-button--default:not(.is-plain):active {
+  background: var(--default-active-bg);
+  color: var(--default-active-txt);
+  border-color: var(--default-active-border);
+}
+
+.el-switch.is-checked .el-switch__core,
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner,
+.el-radio__input.is-checked .el-radio__inner {
+  background: var(--primary-bg);
+  border-color: var(--primary-border);
+}
+
+.el-radio-button__orig-radio:checked + .el-radio-button__inner {
+  background: var(--primary-bg);
+  color: var(--primary-txt);
+  border-color: var(--primary-border);
+  box-shadow: -1px 0 0 0 var(--primary-border);
+}
+
+.el-tabs__active-bar,
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background: var(--primary-bg);
+}
+
+a,
+a:visited,
+.el-button--text,
+.el-tabs__item:hover,
+.el-tabs__item.is-active,
+.el-checkbox__input.is-checked + .el-checkbox__label,
+.el-radio__input.is-checked + .el-radio__label,
+.el-time-panel__btn.confirm,
+.el-pager li:hover,
+.el-pager li.active,
+.el-pagination button:hover,
+.el-link.el-link--primary {
+  color: var(--primary-bg);
+}
+
+a:hover,
+.el-button--text:hover,
+.el-button--text:focus,
+.el-radio-button__inner:hover,
+.el-dialog__headerbtn:focus .el-dialog__close,
+.el-dialog__headerbtn:hover .el-dialog__close,
+.el-breadcrumb__inner a:hover,
+.el-breadcrumb__inner.is-link:hover,
+.el-link.el-link--default:hover,
+.el-link.el-link--primary:hover,
+.el-link.el-link--primary:focus {
+  color: var(--primary-hover-bg);
+}
+
+a:active,
+.el-button--text:active {
+  color: var(--primary-active-bg);
+}
+
+.el-input.is-active .el-input__inner,
+.el-input__inner:hover,
+.el-input__inner:focus,
+.el-checkbox__inner:hover,
+.el-checkbox__inner:focus,
+.el-checkbox__input.is-focus .el-checkbox__inner,
+.el-radio__inner:hover,
+.el-select .el-input__inner:focus,
+.el-select .el-input.is-focus .el-input__inner,
+.el-select:hover .el-input__inner,
+.el-range-editor.is-active,
+.el-range-editor.is-active:hover,
+.el-pagination__sizes .el-input .el-input__inner:hover,
+.el-textarea__inner:hover,
+.el-textarea__inner:focus,
+.el-link.el-link--default.is-underline:hover:after,
+.el-link.el-link--primary.is-underline:hover:after {
+  border-color: var(--primary-hover-border);
+}
+
+.el-button.el-button--primary:not(.is-plain) {
+  background: var(--primary-bg);
+  color: var(--primary-txt);
+  border-color: var(--primary-border);
+}
+
+.el-button.el-button--primary:not(.is-plain):hover,
+.el-button.el-button--primary:not(.is-plain):focus {
+  background: var(--primary-hover-bg);
+  color: var(--primary-hover-txt);
+  border-color: var(--primary-hover-border);
+}
+
+.el-button.el-button--primary:not(.is-plain):active {
+  background: var(--primary-active-bg);
+  color: var(--primary-active-txt);
+  border-color: var(--primary-active-border);
+}
+
+/* 禁用的放后面提高优先级 */
+.el-button.el-button--default.is-disabled,
+.el-button.el-button--default.is-disabled:focus,
+.el-button.el-button--default.is-disabled:hover,
+.el-radio-button__orig-radio:disabled + .el-radio-button__inner,
+.el-date-table td.disabled div,
+.el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner,
+.el-range-editor.is-disabled,
+.el-range-editor.is-disabled:focus,
+.el-range-editor.is-disabled:hover,
+.el-range-editor.is-disabled input,
+.el-pagination button:disabled {
+  background: var(--default-disabled-bg);
+  color: var(--default-disabled-txt);
+  border-color: var(--default-disabled-border);
+}
+
+.el-checkbox__input.is-disabled .el-checkbox__inner,
+.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner,
+.el-radio__input.is-disabled .el-radio__inner,
+.el-radio__input.is-disabled.is-checked .el-radio__inner {
+  background: var(--default-disabled-bg);
+  border-color: var(--default-disabled-border);
+}
+
+.el-select .el-input.is-disabled .el-input__inner:hover {
+  border-color: var(--default-disabled-border);
+}
+
+.el-tabs__item.is-disabled {
+  color: var(--default-disabled-txt);
+}
+
+.el-button.el-button--primary:not(.is-plain).is-disabled,
+.el-button.el-button--primary:not(.is-plain).is-disabled:focus,
+.el-button.el-button--primary:not(.is-plain).is-disabled:hover,
+.el-radio-button__orig-radio:disabled:checked + .el-radio-button__inner {
+  background: var(--primary-disabled-bg);
+  color: var(--primary-disabled-txt);
+  border-color: var(--primary-disabled-border);
+}
+
+/* loading样式处理 */
+.el-loading-spinner .path {
+  stroke: var(--primary-bg);
+}
+
+/* table固定列样式处理 */
+.el-table__fixed,
+.el-table__fixed-right,
+.el-table__fixed-right-patch {
+  background: var(--pop-bg);
+}
+
+.el-table__body-wrapper.is-scrolling-none ~ .el-table__fixed,
+.el-table__body-wrapper.is-scrolling-none ~ .el-table__fixed-right,
+.el-table__fixed::before,
+.el-table__fixed-right::before,
+.el-table__fixed tr,
+.el-table__fixed-right tr,
+.el-table__fixed tr > th,
+.el-table__fixed-right tr > th,
+.el-table__body-wrapper.is-scrolling-none
+  ~ .el-table__fixed
+  .el-table__body
+  tr.el-table__row--striped
+  td,
+.el-table__body-wrapper.is-scrolling-none
+  ~ .el-table__fixed-right
+  .el-table__body
+  tr.el-table__row--striped
+  td,
+.el-table__body-wrapper.is-scrolling-none ~ .el-table__fixed tr.hover-row > td,
+.el-table__body-wrapper.is-scrolling-none
+  ~ .el-table__fixed-right
+  tr.hover-row
+  > td {
+  background: none;
+}
+
+/* 日期范围样式处理 */
+.el-date-table td.in-range div,
+.el-date-table td.in-range div:hover,
+.el-date-table.is-week-mode .el-date-table__row.current div,
+.el-date-table.is-week-mode .el-date-table__row:hover div {
+  background: var(--range-bg);
+}
+
+.el-date-table td.end-date span,
+.el-date-table td.start-date span {
+  background: var(--primary-bg);
+}
+
+.el-date-table td.today span {
+  color: var(--primary-bg);
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  /*background-color: #ddd;*/
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.3);
+  box-shadow: inset 0 0 4px #ccc;
+  /* border: 1px solid #888; */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.5);
+  /* box-shadow: inset 0 0 4px #aaa; */
+}
+/* ::-webkit-scrollbar-track {
+  background: rgba(200, 200, 200, 0.3);
+  box-shadow: inset 0 0 4px #ccc;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track:hover {
+  background: rgba(150, 150, 150, 0.2);
+  box-shadow: inset 0 0 1px #ccc;
+} */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 顶部进度条 */
+#nprogress .bar {
+  background: var(--primary-bg) !important;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--primary-bg), 0 0 5px var(--primary-bg) !important;
+}

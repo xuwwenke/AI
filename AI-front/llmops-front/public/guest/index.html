@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>游客免登录</title>
+  </head>
+  <body>
+    <script src="/guest/axios.min.js"></script>
+    <script src="/guest/rsaUtil.js"></script>
+    <script>
+      // 加载全局配置
+      document.write('<script src="/global.config.js?t=' + new Date().getTime() + '"><'+'/script>');
+    </script>
+    <script>
+      // 访问方式 http://xxx/guest?target=/somepage, 追加 %3FautoShowCompass%3D1 可在跳转后自动打开罗盘
+      var appKey = window.globalConfig.appKey || "xxxxx"; // 应用的 appkey
+      var user = window.globalConfig.guestUser || "xxxxx"; // 游客身份的用户名
+      var pwd = window.globalConfig.guestPwd || "xxxxx"; // 游客身份的密码，注意后台不能开启验证码
+      var target = getQueryVariable("target");
+      target = target ? decodeURIComponent(target) : "/"; // 登录成功后，跳转目标地址
+
+      // 获取url中的target参数
+      function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split("=");
+          if (pair[0] == variable) {
+            return pair[1];
+          }
+        }
+        return null;
+      }
+
+      axios
+        .get("/service/sso/keyPair")
+        .then(function(res) {
+          if (res.data.code == "200") {
+            const resData = res.data.body;
+            var publicKey = RSAUtils.getKeyPair(
+              resData.exponent,
+              "",
+              resData.modulus
+            );
+
+            axios({
+              method: "post",
+              url: "/service/sso/login",
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=UTF-8"
+              },
+              data:
+                "appKey=" +
+                appKey +
+                "&userName=" +
+                user +
+                "&password=" +
+                RSAUtils.encryptedString(publicKey, pwd)
+            })
+              .then(function(res) {
+                if (res.data.code === 200) {
+                  if (target.charAt(0) == "/") {
+                    target = "/#" + target;
+                  }
+                  window.location.href = target;
+                } else {
+                  console.error(res.data.message);
+                }
+              })
+              .catch(function(error) {
+                console.error(error);
+              });
+          } else {
+            console.error(res.data.message);
+          }
+        })
+        .catch(function(error) {
+          console.error(error);
+        });
+    </script>
+  </body>
+</html>

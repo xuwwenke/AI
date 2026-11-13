@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.ProjectMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Project">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="name" property="name" />
+        <result column="describe" property="describe" />
+        <result column="type" property="type" />
+        <result column="expand" property="expand" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+    </resultMap>
+
+    <!-- 关联查询映射结果 -->
+    <resultMap id="ProjectWithManagerResultMap" type="com.eversec.llmops.service.entity.Project" extends="BaseResultMap">
+        <result column="user_count" property="userCount" />
+        <result column="experiment_count" property="experimentCount" />
+        <association property="projectManager" javaType="com.eversec.llmops.service.entity.ProjectManager">
+            <id column="pm_id" property="id" />
+            <result column="pm_project_id" property="projectId" />
+            <result column="pm_pro_name" property="proName" />
+            <result column="pm_pro_type" property="proType" />
+            <result column="pm_bz" property="bz" />
+            <result column="pm_status" property="status" />
+            <result column="pm_createtime" property="createtime" />
+            <result column="pm_updatetime" property="updatetime" />
+            <result column="pm_operator" property="operator" />
+            <result column="pm_gpu" property="gpu" />
+            <result column="pm_cpu" property="cpu" />
+            <result column="pm_memory" property="memory" />
+            <result column="pm_cluster_name" property="clusterName" />
+            <result column="pm_desc_zh" property="descZh" />
+            <result column="pm_group_name" property="groupName" />
+            <result column="pm_node_group_name" property="nodeGroupName" />
+            <result column="pm_storage" property="storage" />
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, name, `describe`, type, expand, created_by_fk, changed_by_fk
+    </sql>
+
+    <!-- 关联查询分页 -->
+    <select id="customGetPageListWithManager" resultMap="ProjectWithManagerResultMap">
+        SELECT 
+            p.created_on, p.changed_on, p.id, p.name, p.`describe`, p.type, p.expand, p.created_by_fk, p.changed_by_fk,
+            (SELECT COUNT(*) FROM pro_user pu WHERE pu.pro_id = p.id) as user_count,
+            (SELECT COUNT(*) FROM ai_experiment ae WHERE ae.project_id = p.id) as experiment_count,
+            pm.id as pm_id, pm.project_id as pm_project_id, pm.pro_name as pm_pro_name, pm.pro_type as pm_pro_type,
+            pm.bz as pm_bz, pm.status as pm_status, pm.createtime as pm_createtime, pm.updatetime as pm_updatetime,
+            pm.operator as pm_operator, pm.gpu as pm_gpu, pm.cpu as pm_cpu, pm.memory as pm_memory,pm.storage as pm_storage,
+            pm.cluster_name as pm_cluster_name, pm.desc_zh as pm_desc_zh, pm.group_name as pm_group_name,
+            pm.node_group_name as pm_node_group_name
+        FROM project p
+        INNER JOIN pro_manager pm ON p.id = pm.project_id
+        WHERE p.type = 'org'
+        <if test="name != null and name != ''">
+            AND p.name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="clusterName != null and clusterName != ''">
+            AND pm.cluster_name LIKE CONCAT('%', #{clusterName}, '%')
+        </if>
+            AND pm.cluster_name is not null
+        order by p.id desc
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 关联查询总数 -->
+    <select id="customGetTotalCountWithManager" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT p.id) FROM project p
+        INNER JOIN pro_manager pm ON p.id = pm.project_id
+        WHERE p.type = 'org'  AND pm.cluster_name is not null
+        <if test="name != null and name != ''">
+            AND p.name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="clusterName != null and clusterName != ''">
+            AND pm.cluster_name LIKE CONCAT('%', #{clusterName}, '%')
+        </if>
+    </select>
+
+    <!-- 根据ID获取详情（包含项目管理器信息） -->
+    <select id="getByIdWithManager" resultMap="ProjectWithManagerResultMap">
+        SELECT 
+            p.created_on, p.changed_on, p.id, p.name, p.`describe`, p.type, p.expand, p.created_by_fk, p.changed_by_fk,
+            (SELECT COUNT(*) FROM pro_user pu WHERE pu.pro_id = p.id) as user_count,
+            (SELECT COUNT(*) FROM ai_experiment ae WHERE ae.project_id = p.id) as experiment_count,
+            pm.id as pm_id, pm.project_id as pm_project_id, pm.pro_name as pm_pro_name, pm.pro_type as pm_pro_type,
+            pm.bz as pm_bz, pm.status as pm_status, pm.createtime as pm_createtime, pm.updatetime as pm_updatetime,
+            pm.operator as pm_operator, pm.gpu as pm_gpu, pm.cpu as pm_cpu, pm.memory as pm_memory,
+            pm.cluster_name as pm_cluster_name, pm.desc_zh as pm_desc_zh, pm.group_name as pm_group_name,
+            pm.node_group_name as pm_node_group_name
+        FROM project p
+        LEFT JOIN pro_manager pm ON p.id = pm.project_id
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="getCurrentUserProjectListWithManager" resultMap="ProjectWithManagerResultMap">
+        SELECT
+            p.created_on, p.changed_on, p.id, p.name, p.`describe`, p.type, p.expand, p.created_by_fk, p.changed_by_fk,
+            (SELECT COUNT(*) FROM pro_user pu WHERE pu.pro_id = p.id) as user_count,
+            (SELECT COUNT(*) FROM ai_experiment ae WHERE ae.project_id = p.id) as experiment_count,
+            pm.id as pm_id, pm.project_id as pm_project_id, pm.pro_name as pm_pro_name, pm.pro_type as pm_pro_type,
+            pm.bz as pm_bz, pm.status as pm_status, pm.createtime as pm_createtime, pm.updatetime as pm_updatetime,
+            pm.operator as pm_operator, pm.gpu as pm_gpu, pm.cpu as pm_cpu, pm.memory as pm_memory, pm.storage as pm_storage,
+            pm.cluster_name as pm_cluster_name, pm.desc_zh as pm_desc_zh, pm.group_name as pm_group_name,
+            pm.node_group_name as pm_node_group_name
+        FROM project p
+        INNER JOIN pro_manager pm ON p.id = pm.project_id
+        WHERE p.type = 'org'
+          AND pm.cluster_name is not null
+          AND pm.cluster_name != ''
+          AND EXISTS (
+              SELECT 1
+              FROM pro_user pu
+              WHERE pu.pro_id = p.id
+                AND pu.user_id = #{userId}
+          )
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="getCurrentUserProjectTotalCountWithManager" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM project p
+        INNER JOIN pro_manager pm ON p.id = pm.project_id
+        WHERE p.type = 'org'
+          AND pm.cluster_name is not null
+          AND pm.cluster_name != ''
+          AND EXISTS (
+              SELECT 1
+              FROM pro_user pu
+              WHERE pu.pro_id = p.id
+                AND pu.user_id = #{userId}
+          )
+    </select>
+
+    <select id="getAllProjectListWithManager" resultMap="ProjectWithManagerResultMap">
+        SELECT
+            p.created_on, p.changed_on, p.id, p.name, p.`describe`, p.type, p.expand, p.created_by_fk, p.changed_by_fk,
+            (SELECT COUNT(*) FROM pro_user pu WHERE pu.pro_id = p.id) as user_count,
+            (SELECT COUNT(*) FROM ai_experiment ae WHERE ae.project_id = p.id) as experiment_count,
+            pm.id as pm_id, pm.project_id as pm_project_id, pm.pro_name as pm_pro_name, pm.pro_type as pm_pro_type,
+            pm.bz as pm_bz, pm.status as pm_status, pm.createtime as pm_createtime, pm.updatetime as pm_updatetime,
+            pm.operator as pm_operator, pm.gpu as pm_gpu, pm.cpu as pm_cpu, pm.memory as pm_memory, pm.storage as pm_storage,
+            pm.cluster_name as pm_cluster_name, pm.desc_zh as pm_desc_zh, pm.group_name as pm_group_name,
+            pm.node_group_name as pm_node_group_name
+        FROM project p
+        INNER JOIN pro_manager pm ON p.id = pm.project_id
+        WHERE p.type = 'org'
+          AND pm.cluster_name is not null
+          AND pm.cluster_name != ''
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="getAllProjectTotalCountWithManager" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM project p
+        INNER JOIN pro_manager pm ON p.id = pm.project_id
+        WHERE p.type = 'org'
+          AND pm.cluster_name is not null
+          AND pm.cluster_name != ''
+    </select>
+
+    <!-- 获取type=job-template的项目列表，只返回id和name -->
+    <select id="getJobTemplateProjects" resultType="com.eversec.llmops.service.dto.ProjectSimpleDTO">
+        SELECT id, name FROM project WHERE type = 'job-template' ORDER BY id DESC
+    </select>
+
+</mapper>

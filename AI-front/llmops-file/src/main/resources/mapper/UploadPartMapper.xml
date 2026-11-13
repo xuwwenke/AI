@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.file.mapper.UploadPartMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.file.entity.UploadPart">
+        <id column="id" property="id" />
+        <result column="upload_id" property="uploadId" />
+        <result column="part_number" property="partNumber" />
+        <result column="etag" property="etag" />
+        <result column="part_size" property="partSize" />
+        <result column="upload_time" property="uploadTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, upload_id, part_number, etag, part_size, upload_time
+    </sql>
+
+</mapper>

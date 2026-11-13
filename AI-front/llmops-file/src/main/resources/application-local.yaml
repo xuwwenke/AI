@@ -1,0 +1,24 @@
+DATABASE_HOST: 192.168.75.239
+DATABASE_PORT: 30511
+DATABASE_USERNAME: root
+DATABASE_PASSWORD: admin
+
+
+
+KUBEFLOW_DATABASE_HOST: 192.168.75.239
+KUBEFLOW_DATABASE_PORT: 30511
+KUBEFLOW_DATABASE_USERNAME: root
+KUBEFLOW_DATABASE_PASSWORD: admin
+
+eureka:
+  client:
+    enabled: false
+    registerWithEureka: false
+
+
+
+
+MINIO_ENDPOINT: http://cloud.everoffice.cn:32465
+MINIO_ACCESS_KEY: minioadmin
+MINIO_SECRET_KEY: minioadmin
+MINIO_PUBLIC_ENDPOINT: https://llmops-front.llmops.cloud.everoffice.cn/minio

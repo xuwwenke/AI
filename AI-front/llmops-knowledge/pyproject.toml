@@ -1,0 +1,22 @@
+[project]
+name = "llmops-knowledge"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "cryptography>=46.0.3",
+    "django>=5.2.18",
+    "djangorestframework>=3.18.3",
+    "dotenv>=0.9.9",
+    "drf-spectacular>=0.30.0",
+    "mysqlclient>=2.3.0",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+llmops-knowledge = "llmops_knowledge:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"

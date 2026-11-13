@@ -1,0 +1,80 @@
+:root {
+  /* 网站框架 */
+  --site-header-bg: white;
+  --site-header-txt: #333;
+  --site-main-content-bg: #fff;
+  --site-footer-bg: white;
+  --site-footer-txt: #333;
+  --site-menu-bg: #454545;
+  --site-menu-txt: white;
+  --site-menu-hover-bg: #383838;
+  --site-menu-hover-txt: white;
+  --site-menu-active-bg: #303030;
+  --site-menu-active-txt: #00b7ff;
+  --site-menu-assist-txt: #909399;
+  --site-sub-menu-bg: #f4f4f4;
+  --site-sub-menu2-bg: white;
+  --site-tabs-bg: #646464;
+  --site-tabs-txt: white;
+  --site-tabs-hover-bg: #505050;
+  --site-tabs-hover-txt: white;
+  --site-tabs-active-bg: white;
+  --site-tabs-active-txt: #333;
+  /* 子元素：卡片，表格，菜单等 */
+  --sub-bg: rgba(255, 255, 255, 0.9);
+  --sub-txt: #333;
+  --sub-border: #dcdfe6;
+  --sub-hover-bg: #f1f6ff;
+  --sub-hover-txt: #333;
+  --sub-active-bg: #d3e8ff;
+  --sub-active-txt: #333;
+  /* 弹窗 */
+  --pop-bg: white;
+  --pop-txt: #333;
+  --pop-border: #E4E7ED;
+  --pop-hover-bg: #ecf5ff;
+  --pop-hover-txt: #66b1ff;
+  --pop-hover-border: transparent;
+  --pop-active-bg: #ecf5ff;
+  --pop-active-txt: #00b7ff;
+  --pop-active-border: transparent;
+  /* 对话框 */
+  --dialog-bg: white;
+  --dialog-txt: #333;
+  /* 辅助 */
+  --assist-bg: #fafafa;
+  --assist-txt: #5c5d61;
+  --assist-border: #ebeef5;
+  /* 日期范围 */
+  --range-bg: #f2f6fc;
+  /* 主要色 */
+  --default-bg: white;
+  --default-txt: #606266;
+  --default-border: #dcdfe6;
+  --default-hover-bg: #ecf5ff;
+  --default-hover-txt: #409eff;
+  --default-hover-border: #c6e2ff;
+  --default-active-bg: white;
+  --default-active-txt: #3a8ee6;
+  --default-active-border: #3a8ee6;
+  --default-disabled-bg: #f5f7fa;
+  --default-disabled-txt: #9c9c9c;
+  --default-disabled-border: #ebeef5;
+
+  --primary-bg: #409eff;
+  --primary-txt: white;
+  --primary-border: #409eff;
+  --primary-hover-bg: #66b1ff;
+  --primary-hover-txt: white;
+  --primary-hover-border: #66b1ff;
+  --primary-active-bg: #3a8ee6;
+  --primary-active-txt: white;
+  --primary-active-border: #3a8ee6;
+  --primary-disabled-bg: #89c4ff;
+  --primary-disabled-txt: white;
+  --primary-disabled-border: #89c4ff;
+}
+
+body {
+  color: #333;
+}

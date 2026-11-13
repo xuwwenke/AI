@@ -1,0 +1,87 @@
+:root {
+  /* 网站框架 */
+  --site-header-bg: none;
+  --site-header-txt: white;
+  --site-main-content-bg: transparent;
+  --site-footer-bg: none;
+  --site-footer-txt: white;
+  --site-menu-bg: rgba(0, 0, 0, 0.2);
+  --site-menu-txt: white;
+  --site-menu-hover-bg: none;
+  --site-menu-hover-txt: #66b1ff;
+  --site-menu-active-bg: none;
+  --site-menu-active-txt: #00b7ff;
+  --site-menu-assist-txt: #c0c4cc;
+  --site-sub-menu-bg: rgba(0, 0, 0, 0.8);
+  --site-sub-menu2-bg: rgba(0, 0, 0, 0.8);
+  --site-tabs-bg: none;
+  --site-tabs-txt: white;
+  --site-tabs-hover-bg: none;
+  --site-tabs-hover-txt: #66b1ff;
+  --site-tabs-active-bg: none;
+  --site-tabs-active-txt: #00b7ff;
+  /* 子元素：卡片，表格，菜单等 */
+  --sub-bg: rgba(0, 0, 0, 0.1);
+  --sub-txt: white;
+  --sub-border: gray;
+  --sub-hover-bg: rgba(0, 0, 0, 0.4);
+  --sub-hover-txt: #66b1ff;
+  --sub-active-bg: rgba(0, 0, 0, 0.6);
+  --sub-active-txt: #00b7ff;
+  /* 弹窗 */
+  --pop-bg: rgba(0, 0, 0, 0.8);
+  --pop-txt: white;
+  --pop-border: gray;
+  --pop-hover-bg: none;
+  --pop-hover-txt: #66b1ff;
+  --pop-hover-border: transparent;
+  --pop-active-bg: none;
+  --pop-active-txt: #00b7ff;
+  --pop-active-border: transparent;
+  /* 对话框 */
+  --dialog-bg: #07223f;
+  --dialog-txt: white;
+  /* 辅助 */
+  --assist-bg: rgba(0, 0, 0, 0.1);
+  --assist-txt: #c0c4cc;
+  --assist-border: gray;
+  /* 日期范围 */
+  --range-bg: rgba(0, 162, 255, 0.5);
+  /* 主要色 */
+  --default-bg: rgba(0, 0, 0, 0.2);
+  --default-txt: white;
+  --default-border: gray;
+  --default-hover-bg: rgba(0, 0, 0, 0.5);
+  --default-hover-txt: white;
+  --default-hover-border: gray;
+  --default-active-bg: rgba(0, 0, 0, 0.7);
+  --default-active-txt: white;
+  --default-active-border: gray;
+  --default-disabled-bg: rgba(150, 150, 150, 0.3);
+  --default-disabled-txt: #adadad;
+  --default-disabled-border: rgba(60, 60, 60, 0.3);
+
+  --primary-bg: #2197c5;
+  --primary-txt: white;
+  --primary-border: #2197c5;
+  --primary-hover-bg: #28ace0;
+  --primary-hover-txt: white;
+  --primary-hover-border: #28ace0;
+  --primary-active-bg: #11a3dd;
+  --primary-active-txt: white;
+  --primary-active-border: #11a3dd;
+  --primary-disabled-bg: #84b3c5;
+  --primary-disabled-txt: white;
+  --primary-disabled-border: #84b3c5;
+}
+
+body {
+  background: #07223f url(assets/bg.jpg) no-repeat center fixed;
+  background-size: cover;
+  color: #fff;
+}
+
+.el-alert.is-light,
+.el-tag.el-tag--light {
+  background: var(--sub-bg) !important;
+}

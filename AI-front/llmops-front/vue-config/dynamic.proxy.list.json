@@ -1,0 +1,17 @@
+[
+  {
+    "active": 1,
+    "target": "http://ebp-gateway.llmops-dev.cloud.everoffice.cn",
+    "desc": "通过 evercloud 域名 连网关, ebp-gateway 服务需启用域名访问"
+  },
+  {
+    "active": 0,
+    "target": "http://XXX.XXX.XXX.XXX:YYYYY",
+    "desc": "通过 ip + 端口 连网关"
+  },
+  {
+    "active": 0,
+    "target": "http://XXX-front.XXX.cloud.everoffice.cn/service",
+    "desc": "通过 已有前端地址 结合 /service 二次代理到网关"
+  }
+]

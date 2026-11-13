@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.PipelineMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Pipeline">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="name" property="name" />
+        <result column="describe" property="describe" />
+        <result column="project_id" property="projectId" />
+        <result column="dag_json" property="dagJson" />
+        <result column="namespace" property="namespace" />
+        <result column="global_env" property="globalEnv" />
+        <result column="schedule_type" property="scheduleType" />
+        <result column="cron_time" property="cronTime" />
+        <result column="pipeline_file" property="pipelineFile" />
+        <result column="pipeline_argo_id" property="pipelineArgoId" />
+        <result column="version_id" property="versionId" />
+        <result column="run_id" property="runId" />
+        <result column="node_selector" property="nodeSelector" />
+        <result column="image_pull_policy" property="imagePullPolicy" />
+        <result column="parallelism" property="parallelism" />
+        <result column="alert_status" property="alertStatus" />
+        <result column="alert_user" property="alertUser" />
+        <result column="expand" property="expand" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+        <result column="depends_on_past" property="dependsOnPast" />
+        <result column="max_active_runs" property="maxActiveRuns" />
+        <result column="parameter" property="parameter" />
+        <result column="expired_limit" property="expiredLimit" />
+        <result column="cronjob_start_time" property="cronjobStartTime" />
+        <result column="priority" property="priority" />
+        <result column="type" property="type" />
+        <result column="ai_experiment_id" property="aiExperimentId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, name, `describe`, project_id, dag_json, namespace, global_env, schedule_type, cron_time, pipeline_file, pipeline_argo_id, version_id, run_id, node_selector, image_pull_policy, parallelism, alert_status, alert_user, expand, created_by_fk, changed_by_fk, depends_on_past, max_active_runs, parameter, expired_limit, cronjob_start_time, priority, type
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.dto.PipelineDTO">
+        SELECT
+        p.id, 
+        pr.name as project, 
+        p.name, 
+        p.describe,
+        p.version_id as version,
+        a.nickname as creator,
+        DATE_FORMAT(p.changed_on, '%Y-%m-%d %H:%i:%s') as modified,
+        p.expand,
+        ae.name as aiExperimentName
+        FROM pipeline p
+        LEFT JOIN project pr ON p.project_id = pr.id
+        LEFT JOIN ab_user a ON p.created_by_fk = a.id
+        LEFT JOIN ai_experiment ae ON p.ai_experiment_id = ae.id
+        <where>
+            <if test="id != null">
+                AND p.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND p.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="describe != null and describe != ''">
+                AND p.describe LIKE CONCAT('%', #{describe}, '%')
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND pr.name = #{namespace}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+            <if test="aiExperimentId != null">
+                AND p.ai_experiment_id = #{aiExperimentId}
+            </if>
+        </where>
+        ORDER BY p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(DISTINCT p.id)
+        FROM pipeline p
+        LEFT JOIN project pr ON p.project_id = pr.id
+        LEFT JOIN ab_user a ON p.created_by_fk = a.id
+        <where>
+            <if test="id != null">
+                AND p.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND p.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="describe != null and describe != ''">
+                AND p.describe LIKE CONCAT('%', #{describe}, '%')
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND pr.name = #{namespace}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+            <if test="aiExperimentId != null">
+                AND p.ai_experiment_id = #{aiExperimentId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据ID获取详情（包含关联信息） -->
+    <select id="getPipelineDetailById" resultType="com.eversec.llmops.service.dto.PipelineDTO">
+        SELECT
+        p.id,
+        pr.name as project,
+        p.name,
+        p.describe,
+        p.version_id as version,
+        a.nickname as creator,
+        DATE_FORMAT(p.changed_on, '%Y-%m-%d %H:%i:%s') as modified,
+        p.expand,
+        ae.name as aiExperimentName
+        FROM pipeline p
+        LEFT JOIN project pr ON p.project_id = pr.id
+        LEFT JOIN ab_user a ON p.created_by_fk = a.id
+        LEFT JOIN ai_experiment_pipeline aep ON p.id = aep.pipeline_id
+        LEFT JOIN ai_experiment ae ON aep.experiment_id = ae.id
+        WHERE p.id = #{id}
+    </select>
+
+</mapper>

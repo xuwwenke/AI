@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.DockerMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Docker">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="describe" property="describe" />
+        <result column="base_image" property="baseImage" />
+        <result column="target_image" property="targetImage" />
+        <result column="consecutive_build" property="consecutiveBuild" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+        <result column="expand" property="expand" />
+        <result column="last_image" property="lastImage" />
+        <result column="need_gpu" property="needGpu" />
+        <result column="project_id" property="projectId" />
+        <result column="namespace" property="namespace" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, `describe`, base_image, target_image, consecutive_build, created_by_fk, changed_by_fk, expand, last_image, need_gpu, project_id, namespace
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.entity.Docker">
+        SELECT
+        d.*, p.name as projectName, a.nickname as creatorName
+        FROM docker d
+        LEFT JOIN project p ON d.project_id = p.id
+        LEFT JOIN ab_user a ON d.created_by_fk = a.id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND p.name = #{namespace}
+            </if>
+            <if test="creatorName != null and creatorName != ''">
+                AND a.nickname LIKE CONCAT('%', #{creatorName}, '%')
+            </if>
+        </where>
+        ORDER BY d.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM docker d
+        LEFT JOIN project p ON d.project_id = p.id
+        LEFT JOIN ab_user a ON d.created_by_fk = a.id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND p.name = #{namespace}
+            </if>
+            <if test="creatorName != null and creatorName != ''">
+                AND a.nickname LIKE CONCAT('%', #{creatorName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getById" resultType="com.eversec.llmops.service.entity.Docker">
+        SELECT
+        d.*, p.name as projectName, a.nickname as creatorName
+        FROM docker d
+        LEFT JOIN project p ON d.project_id = p.id
+        LEFT JOIN ab_user a ON d.created_by_fk = a.id
+        WHERE d.id = #{id}
+    </select>
+</mapper>

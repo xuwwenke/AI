@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <p>iframe-loader内嵌测试页面</p>
+    <button onclick="onLogout()">触发外层系统回到登录页</button>
+    <button onclick="onRouterPush('/sys/log/login')">触发外层系统路由跳转</button>
+    <button onclick="onDicUpdated('carytest')">触发外层系统更新某个字典</button>
+    <script>
+      // 监听消息
+      window.addEventListener("message", messageHandler);
+      // 消息处理器
+      function messageHandler(event) {
+        // 如果消息源不是父级（iframe 或调用 window.open）
+        if (event.source !== parent && event.source !== window.opener) return;
+        if (event.data.msg == "theme") {
+          console.log("demo2页接收到theme：", event.data.payload);
+        }
+        if (event.data.msg == "filters") {
+          console.log("demo2页接收到filters：", event.data.payload);
+        }
+        if (event.data.msg == "dicUpdated") {
+          console.log("demo2页接收到dicUpdated：", event.data.payload);
+        }
+      }
+      function onLogout() {
+        // 父级回到登录页
+        // payload 传递到父级的数据 { needLogout 父级需要发起注销请求, message 父级提示信息 }
+        // 在同网关情况下，如果嵌入页已经注销，父级不需要再次注销
+        document.referrer &&
+          parent.postMessage(
+            {
+              msg: "onLogout",
+              payload: { needLogout: false, message: "用户未登录" }
+            },
+            document.referrer
+          );
+      }
+      function onRouterPush(url) {
+        document.referrer &&
+          parent.postMessage(
+            {
+              msg: "onRouterPush",
+              payload: { path: url }
+            },
+            document.referrer
+          );
+      }
+      function onDicUpdated(dicCode) {
+        // 先修改该字典
+        // TODO 调后台接口修改字典的代码......
+        // 再通知外层系统
+        document.referrer &&
+          parent.postMessage(
+            {
+              msg: "onDicUpdated",
+              payload: dicCode
+            },
+            document.referrer
+          );
+      }
+    </script>
+  </body>
+</html>

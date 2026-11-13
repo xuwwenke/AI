@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model 文件上传测试</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 32px 16px 48px;
+            font-family: Arial, "Microsoft YaHei", sans-serif;
+            background: #f3f6fb;
+            color: #1f2937;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .page-title { margin-bottom: 8px; font-size: 30px; font-weight: 700; }
+        .page-desc { margin: 0 0 24px; color: #4b5563; line-height: 1.6; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .card { background: #ffffff; border: 1px solid #dbe3ef; border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05); }
+        .card h2 { margin: 0 0 16px; font-size: 18px; }
+        .tip-list { margin: 0; padding-left: 18px; color: #4b5563; line-height: 1.8; }
+        .tip-list code { background: #eef2ff; padding: 2px 6px; border-radius: 4px; }
+        .form-row { display: grid; grid-template-columns: 160px 1fr; gap: 12px; align-items: center; margin-bottom: 12px; }
+        .form-row label { font-weight: 600; color: #374151; }
+        .form-row input { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; }
+        .form-row input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+        .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        button { border: 0; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer; color: #ffffff; background: #2563eb; }
+        button.secondary { background: #64748b; }
+        button.danger { background: #dc2626; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .status { margin-top: 16px; padding: 12px 14px; border-radius: 8px; display: none; line-height: 1.6; }
+        .status.show { display: block; }
+        .status.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
+        .status.success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; }
+        .status.error { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 16px; }
+        .summary-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+        .summary-item .label { display: block; margin-bottom: 6px; color: #64748b; font-size: 12px; }
+        .summary-item .value { word-break: break-all; font-size: 14px; font-weight: 600; }
+        .progress-card { margin-top: 16px; }
+        .progress-top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 14px; color: #475569; }
+        .progress-bar { width: 100%; height: 18px; overflow: hidden; background: #e2e8f0; border-radius: 999px; }
+        .progress-inner { width: 0; height: 100%; background: linear-gradient(90deg, #2563eb, #06b6d4); transition: width 0.2s ease; }
+        .parts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 10px; margin-top: 16px; }
+        .part { padding: 12px 6px; border-radius: 10px; text-align: center; font-size: 12px; font-weight: 700; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; }
+        .part.uploading { background: #dbeafe; border-color: #60a5fa; color: #1d4ed8; }
+        .part.done { background: #dcfce7; border-color: #86efac; color: #15803d; }
+        .part.fail { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+        .logs { margin-top: 16px; padding: 16px; min-height: 220px; max-height: 420px; overflow: auto; border-radius: 10px; background: #0f172a; color: #e2e8f0; font-family: Consolas, "Courier New", monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+        @media (max-width: 720px) { .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">Model 文件上传测试</h1>
+        <p class="page-desc">
+            该页面测试 Model 文件上传接口，使用 bucket=<strong>model</strong>，<br>
+            project 从 <strong>X-Project-Name</strong> header 获取，文件路径结构: <code>{project}/{fileName}</code>
+        </p>
+
+        <div class="grid">
+            <div class="card">
+                <h2>测试配置</h2>
+                <div class="form-row">
+                    <label for="baseUrl">接口根路径</label>
+                    <input id="baseUrl" type="text" value="http://localhost:8080/api/model/upload">
+                </div>
+                <div class="form-row">
+                    <label for="projectName">Project Name</label>
+                    <input id="projectName" type="text" value="my-project" placeholder="将作为X-Project-Name header发送">
+                </div>
+                <div class="form-row">
+                    <label for="fileName">文件名</label>
+                    <input id="fileName" type="text" placeholder="不填则使用上传文件名">
+                </div>
+                <div class="form-row">
+                    <label for="partSizeMb">分片大小(MB)</label>
+                    <input id="partSizeMb" type="number" min="1" step="1" value="5">
+                </div>
+                <div class="form-row">
+                    <label for="concurrency">并发分片数</label>
+                    <input id="concurrency" type="number" min="1" max="6" step="1" value="3">
+                </div>
+                <div class="form-row">
+                    <label for="fileInput">测试文件</label>
+                    <input id="fileInput" type="file">
+                </div>
+                <div class="btn-row">
+                    <button id="startBtn" type="button">开始完整测试</button>
+                    <button id="abortBtn" class="danger" type="button" disabled>中止上传</button>
+                    <button id="clearLogBtn" class="secondary" type="button">清空日志</button>
+                </div>
+                <div id="statusBox" class="status"></div>
+                <div class="summary">
+                    <div class="summary-item"><span class="label">uploadId</span><span id="uploadIdValue" class="value">-</span></div>
+                    <div class="summary-item"><span class="label">分片数量</span><span id="partCountValue" class="value">-</span></div>
+                    <div class="summary-item"><span class="label">文件大小</span><span id="fileSizeValue" class="value">-</span></div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>使用说明</h2>
+                <ul class="tip-list">
+                    <li>该页面测试 <strong>Model</strong> 文件上传专用接口。</li>
+                    <li>Bucket 固定为 <code>model</code>，无需在请求中指定。</li>
+                    <li>Project 名称从 <strong>X-Project-Name</strong> header 获取，用于组织文件路径。</li>
+                    <li>最终文件路径: <code>{project}/{fileName}</code></li>
+                    <li>如需测试通用分片上传，请使用 <code>/api/multipart</code> 接口。</li>
+                </ul>
+                <div class="progress-card">
+                    <div class="progress-top"><span id="progressText">等待开始</span><span id="progressPercent">0%</span></div>
+                    <div class="progress-bar"><div id="progressInner" class="progress-inner"></div></div>
+                    <div id="partsGrid" class="parts-grid"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card"><h2>执行日志</h2><div id="logBox" class="logs"></div></div>
+    </div>
+    <script>
+        const state = { file: null, objectKey: "", uploadId: "", totalParts: 0, completedParts: 0, uploadedParts: [], isUploading: false, aborted: false };
+        const els = {
+            baseUrl: document.getElementById("baseUrl"),
+            projectName: document.getElementById("projectName"),
+            fileName: document.getElementById("fileName"),
+            partSizeMb: document.getElementById("partSizeMb"),
+            concurrency: document.getElementById("concurrency"),
+            fileInput: document.getElementById("fileInput"),
+            startBtn: document.getElementById("startBtn"),
+            abortBtn: document.getElementById("abortBtn"),
+            clearLogBtn: document.getElementById("clearLogBtn"),
+            statusBox: document.getElementById("statusBox"),
+            uploadIdValue: document.getElementById("uploadIdValue"),
+            partCountValue: document.getElementById("partCountValue"),
+            fileSizeValue: document.getElementById("fileSizeValue"),
+            progressText: document.getElementById("progressText"),
+            progressPercent: document.getElementById("progressPercent"),
+            progressInner: document.getElementById("progressInner"),
+            partsGrid: document.getElementById("partsGrid"),
+            logBox: document.getElementById("logBox")
+        };
+
+        function initPage() {
+            log("页面已初始化");
+            els.fileInput.addEventListener("change", handleFileChange);
+            els.startBtn.addEventListener("click", startUpload);
+            els.abortBtn.addEventListener("click", abortUpload);
+            els.clearLogBtn.addEventListener("click", () => { els.logBox.textContent = ""; log("日志已清空"); });
+        }
+
+        function handleFileChange(e) {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            state.file = file;
+            els.fileSizeValue.textContent = formatFileSize(file.size);
+            if (!els.fileName.value.trim()) {
+                const safe = file.name.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9.\-_]/g, "");
+                els.fileName.value = safe || "file.bin";
+            }
+            log("已选择文件: " + file.name + " (" + formatFileSize(file.size) + ")");
+        }
+
+        function getBaseUrl() { return els.baseUrl.value.trim().replace(/\/+$/, ""); }
+        function getPartSize() { const v = Number(els.partSizeMb.value || 5); return Math.max(1, v) * 1024 * 1024; }
+        function getConcurrency() { const v = Number(els.concurrency.value || 3); return Math.min(6, Math.max(1, v)); }
+
+        function showStatus(type, msg) {
+            els.statusBox.className = "status show " + type;
+            els.statusBox.textContent = msg;
+        }
+        function log(msg, data) {
+            const time = new Date().toLocaleTimeString();
+            let line = "[" + time + "] " + msg;
+            if (data !== undefined) line += "\n" + (typeof data === "string" ? data : JSON.stringify(data, null, 2));
+            els.logBox.textContent += line + "\n\n";
+            els.logBox.scrollTop = els.logBox.scrollHeight;
+        }
+
+        function setProgress(done, total, text) {
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            els.progressInner.style.width = pct + "%";
+            els.progressPercent.textContent = pct + "%";
+            els.progressText.textContent = text || (pct + "%");
+        }
+        function renderParts(n) {
+            els.partsGrid.innerHTML = "";
+            for (let i = 1; i <= n; i++) {
+                const div = document.createElement("div");
+                div.id = "part-" + i;
+                div.className = "part";
+                div.textContent = "Part " + i;
+                els.partsGrid.appendChild(div);
+            }
+        }
+        function updatePart(n, st) {
+            const el = document.getElementById("part-" + n);
+            if (!el) return;
+            el.className = "part " + st;
+            if (st === "uploading") el.textContent = "Part " + n + " ...";
+            else if (st === "done") el.textContent = "Part " + n + " OK";
+            else if (st === "fail") el.textContent = "Part " + n + " ERR";
+            else el.textContent = "Part " + n;
+        }
+
+        async function startUpload() {
+            const file = els.fileInput.files?.[0];
+            if (!file) { showStatus("error", "请先选择文件"); return; }
+            if (file.size === 0) { showStatus("error", "不能上传空文件"); return; }
+
+            const project = els.projectName.value.trim() || "default";
+            const fileName = els.fileName.value.trim() || file.name;
+            const baseUrl = getBaseUrl();
+
+            resetState();
+            state.file = file;
+            state.isUploading = true;
+            state.aborted = false;
+            els.startBtn.disabled = true;
+            els.abortBtn.disabled = false;
+
+            try {
+                showStatus("info", "开始 model 文件上传测试");
+                log("开始测试", { baseUrl, project, fileName, fileSize: file.size, partSize: getPartSize(), concurrency: getConcurrency() });
+
+                await initUpload(baseUrl, project, fileName);
+                await uploadAllParts(baseUrl, file);
+                await completeUpload(baseUrl);
+
+                showStatus("success", "Model 文件上传成功！");
+                log("上传完成", { bucket: "model", objectKey: state.objectKey });
+            } catch (err) {
+                if (state.aborted) { showStatus("error", "上传已中止"); log("用户中止上传"); }
+                else { showStatus("error", err.message || String(err)); log("上传失败", err.message || String(err)); }
+            } finally {
+                state.isUploading = false;
+                els.startBtn.disabled = false;
+                els.abortBtn.disabled = true;
+            }
+        }
+
+        function resetState() {
+            state.file = null; state.objectKey = ""; state.uploadId = "";
+            state.totalParts = 0; state.completedParts = 0; state.uploadedParts = [];
+            state.aborted = false;
+            els.uploadIdValue.textContent = "-"; els.partCountValue.textContent = "-";
+            setProgress(0, 0, "等待开始"); renderParts(0); els.statusBox.className = "status"; els.statusBox.textContent = "";
+        }
+
+        async function initUpload(baseUrl, project, fileName) {
+            setProgress(0, 1, "初始化分片上传");
+            const url = baseUrl + "/init?fileName=" + encodeURIComponent(fileName);
+            log("调用 init 接口", { url, project, fileName });
+
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "X-Project-Name": project }
+            });
+            const text = await res.text();
+            const data = tryJson(text);
+
+            if (!res.ok) throw new Error("初始化失败: HTTP " + res.status + " " + text);
+            if (!data || !data.uploadId) throw new Error("初始化失败: 响应中没有 uploadId");
+
+            state.uploadId = data.uploadId;
+            state.objectKey = data.objectKey;
+            els.uploadIdValue.textContent = state.uploadId;
+            log("init 响应", data);
+        }
+
+        async function uploadAllParts(baseUrl, file) {
+            const partSize = getPartSize();
+            const totalParts = Math.ceil(file.size / partSize);
+            const concurrency = getConcurrency();
+
+            state.totalParts = totalParts;
+            state.completedParts = 0;
+            state.uploadedParts = [];
+            els.partCountValue.textContent = String(totalParts);
+            renderParts(totalParts);
+            setProgress(0, totalParts, "开始上传分片");
+
+            let nextPart = 1;
+            const workers = [];
+            for (let i = 0; i < concurrency; i++) {
+                workers.push((async () => {
+                    while (state.isUploading && !state.aborted) {
+                        const n = nextPart++;
+                        if (n > totalParts) return;
+                        await uploadOnePart(baseUrl, file, partSize, n);
+                    }
+                })());
+            }
+            await Promise.all(workers);
+            if (state.aborted) throw new Error("上传已中止");
+            state.uploadedParts.sort((a, b) => a.partNumber - b.partNumber);
+        }
+
+        async function uploadOnePart(baseUrl, file, partSize, partNumber) {
+            updatePart(partNumber, "uploading");
+            log("获取预签名地址", { partNumber });
+
+            const presigned = await getPresignedUrl(baseUrl, partNumber);
+            const start = (partNumber - 1) * partSize;
+            const end = Math.min(start + partSize, file.size);
+            const blob = file.slice(start, end);
+
+            log("上传分片", { partNumber, size: blob.size });
+
+            const res = await fetch(presigned, { method: "PUT", body: blob });
+            if (!res.ok) {
+                updatePart(partNumber, "fail");
+                throw new Error("分片上传失败, partNumber=" + partNumber + ", HTTP " + res.status);
+            }
+
+            const etagHeader = res.headers.get("etag") || res.headers.get("ETag");
+            const etag = etagHeader ? etagHeader.replace(/"/g, "") : "";
+            if (!etag) {
+                updatePart(partNumber, "fail");
+                throw new Error("分片上传成功但未读取到 ETag，需检查 MinIO CORS 是否暴露 ETag 响应头");
+            }
+
+            await notifyPartComplete(baseUrl, partNumber, etag, blob.size);
+            state.uploadedParts.push({ partNumber, etag });
+            state.completedParts++;
+            updatePart(partNumber, "done");
+            setProgress(state.completedParts, state.totalParts, "已完成 " + state.completedParts + " / " + state.totalParts + " 个分片");
+            log("分片上传完成", { partNumber, etag });
+        }
+
+        async function getPresignedUrl(baseUrl, partNumber) {
+            const url = baseUrl + "/presigned-url?objectKey=" + encodeURIComponent(state.objectKey)
+                + "&uploadId=" + encodeURIComponent(state.uploadId)
+                + "&partNumber=" + partNumber;
+            const res = await fetch(url, { method: "GET" });
+            const text = await res.text();
+            const data = tryJson(text);
+            if (!res.ok) throw new Error("获取预签名 URL 失败, partNumber=" + partNumber + ": HTTP " + res.status + " " + text);
+            if (!data || !data.url) throw new Error("获取预签名 URL 失败, partNumber=" + partNumber + ": 响应中没有 url");
+            return data.url;
+        }
+
+        async function notifyPartComplete(baseUrl, partNumber, etag, partSize) {
+            const url = baseUrl + "/part-complete";
+            const body = {
+                uploadId: state.uploadId,
+                partNumber: partNumber,
+                etag: etag,
+                partSize: partSize
+            };
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            const text = await res.text();
+            const data = tryJson(text);
+            if (!res.ok) {
+                throw new Error("记录分片完成失败, partNumber=" + partNumber + ": HTTP " + res.status + " " + text);
+            }
+            log("调用 part-complete 成功", data || body);
+        }
+
+        async function completeUpload(baseUrl) {
+            setProgress(state.totalParts, state.totalParts, "调用 complete 合并分片");
+            const body = { objectKey: state.objectKey, uploadId: state.uploadId, parts: state.uploadedParts };
+            log("调用 complete 接口", body);
+            const res = await fetch(baseUrl + "/complete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            const text = await res.text();
+            const data = tryJson(text);
+            if (!res.ok) throw new Error("合并失败: HTTP " + res.status + " " + text);
+            log("complete 响应", data || text);
+            setProgress(state.totalParts, state.totalParts, "上传与合并已完成");
+        }
+
+        async function abortUpload() {
+            if (!state.isUploading || !state.uploadId || !state.objectKey) { showStatus("error", "当前没有可中止的上传任务"); return; }
+            if (!confirm("确定要中止上传吗？")) return;
+            state.aborted = true; state.isUploading = false;
+            const baseUrl = getBaseUrl();
+            const url = baseUrl + "/abort?objectKey=" + encodeURIComponent(state.objectKey) + "&uploadId=" + encodeURIComponent(state.uploadId);
+            log("调用 abort 接口", url);
+            try {
+                const res = await fetch(url, { method: "DELETE" });
+                const text = await res.text();
+                const data = tryJson(text);
+                if (!res.ok) throw new Error("中止失败: HTTP " + res.status + " " + text);
+                showStatus("error", "上传已中止");
+                log("abort 响应", data || text);
+            } catch (err) {
+                showStatus("error", err.message || String(err));
+                log("abort 调用失败", err.message || String(err));
+            } finally {
+                els.abortBtn.disabled = true; els.startBtn.disabled = false;
+            }
+        }
+
+        function tryJson(s) { if (!s) return null; try { return JSON.parse(s); } catch (e) { return null; } }
+        function formatFileSize(b) { if (!Number.isFinite(b) || b < 0) return "-"; if (b === 0) return "0 B"; const u = ["B", "KB", "MB", "GB", "TB"]; const e = Math.min(Math.floor(Math.log(b) / Math.log(1024)), u.length - 1); const v = b / Math.pow(1024, e); return v.toFixed(v >= 10 || e === 0 ? 0 : 2) + " " + u[e]; }
+
+        initPage();
+    </script>
+</body>
+</html>

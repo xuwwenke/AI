@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.ProManagerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.ProManager">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="pro_name" property="proName" />
+        <result column="pro_type" property="proType" />
+        <result column="bz" property="bz" />
+        <result column="status" property="status" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+        <result column="operator" property="operator" />
+        <result column="gpu" property="gpu" />
+        <result column="cpu" property="cpu" />
+        <result column="memory" property="memory" />
+        <result column="storage" property="storage" />
+        <result column="cluster_name" property="clusterName" />
+        <result column="desc_zh" property="descZh" />
+        <result column="group_name" property="groupName" />
+        <result column="node_group_name" property="nodeGroupName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, pro_name, pro_type, bz, status, createtime, updatetime, operator, gpu, cpu, memory, storage, cluster_name, desc_zh, group_name, node_group_name
+    </sql>
+
+
+    <select id="getProjectManagersByUsername" parameterType="java.lang.String" resultType="com.eversec.llmops.service.dto.ProjectManagerDTO">
+        SELECT
+            pm.id,
+            pm.pro_name as name,
+            pm.desc_zh as `desc`,
+            pm.bz as showName,
+            pm.cluster_name as clusterName,
+            pm.createtime as createTime,
+            pm.operator,
+            pu.is_admin as role
+        FROM pro_manager pm
+            INNER JOIN pro_user pu ON pm.project_id = pu.pro_id
+        WHERE pu.username = #{username} and pm.status = 0
+    </select>
+
+    <select id="getProjectManagersByUserId" parameterType="java.lang.Long" resultType="com.eversec.llmops.service.dto.ProjectManagerDTO">
+        SELECT
+            pm.id,
+            pm.pro_name as name,
+            pm.desc_zh as `desc`,
+            pm.bz as showName,
+            pm.cluster_name as clusterName,
+            pm.createtime as createTime,
+            pm.operator,
+            pu.is_admin as role
+        FROM pro_manager pm
+            INNER JOIN pro_user pu ON pm.project_id = pu.pro_id
+        WHERE pu.user_id = #{userId} and pm.status = 0
+    </select>
+
+</mapper>

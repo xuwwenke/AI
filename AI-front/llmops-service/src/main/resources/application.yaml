@@ -1,0 +1,117 @@
+spring:
+  application:
+    name: llmops-service
+  flyway:
+    enabled: false
+  datasource:
+    dynamic:
+      primary: kubeflow
+      datasource:
+        kubeflow:
+          url: jdbc:mysql://${DATABASE_HOST:mysql}:${DATABASE_PORT:3306}/${DATABASE_NAME:kubeflow}?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useAffectedRows=true
+          username: ${DATABASE_USERNAME:root}
+          password: ${DATABASE_PASSWORD:netDc@#su}
+        system:
+          url: jdbc:mysql://${SYSTEM_DATABASE_HOST:mysql}:${SYSTEM_DATABASE_PORT:3306}/${SYSTEM_DATABASE_NAME:system}?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useAffectedRows=true
+          username: ${SYSTEM_DATABASE_USERNAME:root}
+          password: ${SYSTEM_DATABASE_PASSWORD:netDc@#su}
+  redis:
+    host:  ${REDIS_HOST:redis}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:netDc@#su}
+    timeout: 10000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 2
+        max-wait: 10000ms
+
+# Redisson 分布式锁配置
+redisson:
+  address: redis://${REDIS_HOST:redis}:${REDIS_PORT:6379}
+  password: ${REDIS_PASSWORD:netDc@#su}
+  database: 0
+  connection-pool-size: 64
+  connection-minimum-idle-size: 16
+  timeout: 10000
+  # 连接超时（毫秒）
+  connect-timeout: 10000
+  # 命令等待超时（毫秒）
+  idle-connection-timeout: 10000
+  # 锁默认超时时间（秒）
+  lock-watchdog-timeout: 30
+
+server:
+  port: 8080
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_ADDRESS:http://eureka:8080/eureka}
+  instance:
+    prefer-ip-address: ${preferIpAddress:true}
+    ip-address: llmops-service
+    non-secure-port: 8080
+
+infra:
+  host: ${INFRA-HOST:kubeflow-dashboard:80}
+default:
+  cluster: ${DEFAULT-CLUSTER:dev}
+prometheus:
+  host: ${PROMETHEUS_HOST:http://prometheus-k8s:9090}
+
+
+code-server-operator-server: http://192.168.75.239:56793
+
+
+
+eversec:
+  dynamic-flyway:
+    kubeflow:
+      order: 200
+      table: flyway_llmops_service
+      dynamic-datasource: kubeflow
+      baseline-on-migrate: true
+      baseline-version: '0'
+      enabled: true
+      ignore-missing-migrations: true
+      locations:
+        - classpath:db/migration-kubeflow
+      out-of-order: true
+      placeholder-prefix: '#('
+      placeholder-suffix: )
+      validate-on-migrate: true
+      init-sqls:
+        - select count(1) from project
+    system:
+      order: 300
+      table: flyway_llmops_system
+      dynamic-datasource: system
+      baseline-on-migrate: true
+      baseline-version: '0'
+      enabled: true
+      ignore-missing-migrations: true
+      locations:
+        - classpath:db/migration-system
+      out-of-order: true
+      placeholder-prefix: '#('
+      placeholder-suffix: )
+      validate-on-migrate: true
+      init-sqls:
+        - select id,insert_time,last_update_time,app_desc,app_key,app_name,app_url,app_icon,seq,app_type,show_in_home,micro_services
+          from sys_security_application limit 0;
+        - select id,insert_time,last_update_time,description,name,role_alias,role_level,role_style,parent_id
+          from sys_security_role limit 0;
+        - select id,org_code,org_name,org_desc,org_level,job_grade,org_style,org_alias,parent_id,insert_time,last_update_time,external_id,external_parent_id,extend1,extend2
+          from sys_security_org limit 0;
+        - select id,user_name,password,reset_password_time,real_name,email,tel,is_valid,comcode,user_desc,sys_org_id,insert_time,last_update_time
+          from sys_security_user limit 0;
+        - select sys_user_id,sys_role_id from sys_security_user_role limit 0;
+        - select sys_user_id,sys_org_id from sys_security_user_org limit 0;
+        - select `id`, `insert_time`, `last_update_time`, `icon`, `name`, `seq`,
+          `type`, `url`, `app_id`, `parent_id`, `open_mode`, `permission_keyword`,
+          `http_method`, `remark`, `is_log`, `other`, `relation`, `subtype`
+          from sys_security_menu limit 0;
+        - select sys_role_id,sys_menu_id from sys_security_role_menu limit 0;

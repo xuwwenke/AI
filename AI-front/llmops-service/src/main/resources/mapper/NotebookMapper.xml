@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.NotebookMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Notebook">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="project_id" property="projectId" />
+        <result column="name" property="name" />
+        <result column="describe" property="describe" />
+        <result column="namespace" property="namespace" />
+        <result column="images" property="images" />
+        <result column="ide_type" property="ideType" />
+        <result column="working_dir" property="workingDir" />
+        <result column="volume_mount" property="volumeMount" />
+        <result column="node_selector" property="nodeSelector" />
+        <result column="image_pull_policy" property="imagePullPolicy" />
+        <result column="resource_memory" property="resourceMemory" />
+        <result column="resource_cpu" property="resourceCpu" />
+        <result column="resource_gpu" property="resourceGpu" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+        <result column="expand" property="expand" />
+        <result column="env" property="env" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, project_id, name, `describe`, namespace, images, ide_type, working_dir, volume_mount, node_selector, image_pull_policy, resource_memory, resource_cpu, resource_gpu, created_by_fk, changed_by_fk, expand, env
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.entity.Notebook">
+        SELECT
+        n.*, p.name as projectName, au.nickname as creator, pm.cluster_name as clusterName
+        FROM notebook n
+        LEFT JOIN project p ON n.project_id = p.id
+        LEFT JOIN ab_user au ON n.created_by_fk = au.id
+        LEFT JOIN pro_manager pm ON n.project_id = pm.project_id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND pm.pro_name = #{namespace}
+            </if>
+            <if test="name != null and name != ''">
+                AND n.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                <choose>
+                    <when test="status == 'running'">
+                        AND n.expand LIKE CONCAT('%', 'online', '%')
+                    </when>
+                    <when test="status == 'stopped'">
+                        AND (n.expand NOT LIKE CONCAT('%', 'online', '%') OR n.expand IS NULL OR n.expand = '')
+                    </when>
+                </choose>
+            </if>
+            <if test="creator != null and creator != ''">
+                AND au.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+        </where>
+        ORDER BY n.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(DISTINCT n.id)
+        FROM notebook n
+        LEFT JOIN project p ON n.project_id = p.id
+        LEFT JOIN ab_user au ON n.created_by_fk = au.id
+        LEFT JOIN pro_manager pm ON n.project_id = pm.project_id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND pm.pro_name = #{namespace}
+            </if>
+            <if test="name != null and name != ''">
+                AND n.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                <choose>
+                    <when test="status == 'running'">
+                        AND n.expand LIKE CONCAT('%', 'online', '%')
+                    </when>
+                    <when test="status == 'stopped'">
+                        AND (n.expand NOT LIKE CONCAT('%', 'online', '%') OR n.expand IS NULL OR n.expand = '')
+                    </when>
+                </choose>
+            </if>
+            <if test="creator != null and creator != ''">
+                AND au.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getById" resultType="com.eversec.llmops.service.entity.Notebook">
+        SELECT
+        n.*, p.name as projectName
+        FROM notebook n
+        LEFT JOIN project p ON n.project_id = p.id
+        WHERE n.id = #{id}
+    </select>
+</mapper>

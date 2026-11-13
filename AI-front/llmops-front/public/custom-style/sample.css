@@ -1,0 +1,53 @@
+/* 以下为自定义样式示例，请前往同目录的 index.css 中编写样式 */
+
+/* 登录页修改示例 */
+#app .bg {
+  background: url(bg.jpg) no-repeat center;
+  background-size: cover;
+}
+#main {
+  background: none;
+}
+#main > div:not(.login-box) {
+  display: none;
+}
+#main > div.login-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+/* 功能罗盘修改示例 */
+.app-links a span {
+  width: 10em !important;
+}
+.menu-links .links-classify .links-title {
+  width: 180px !important;
+  white-space: inherit !important;
+}
+.menu-links .links-classify .links-name {
+  margin-left: 180px !important;
+}
+
+/* 全局表格修改示例 */
+.el-table tr {
+  height: 30px;
+}
+.el-table th,
+.el-table td {
+  padding: 0;
+  background: none !important;
+}
+
+/* 特定仪表盘内全部表格修改示例 */
+div[meterid="64f4cf96507846eebb50de97c388ea9e"] .el-table td {
+  background: skyblue !important;
+}
+
+/* 特定仪表盘内特定表格修改示例 */
+div[meterid="64f4cf96507846eebb50de97c388ea9e"] .el-table[data-v-78e5c48e] td {
+  background: pink !important;
+}

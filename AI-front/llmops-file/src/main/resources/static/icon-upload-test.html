@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon 上传与展示测试</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 32px 16px 48px;
+            font-family: Arial, "Microsoft YaHei", sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+        .container { max-width: 1120px; margin: 0 auto; }
+        .page-title { margin: 0 0 8px; font-size: 30px; font-weight: 700; }
+        .page-desc { margin: 0 0 24px; color: #4b5563; line-height: 1.7; }
+        .grid { display: grid; grid-template-columns: minmax(360px, 520px) minmax(360px, 1fr); gap: 18px; }
+        .card {
+            background: #fff;
+            border: 1px solid #dbe3ef;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+        .card h2 { margin: 0 0 16px; font-size: 18px; }
+        .form-row {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .form-row label { font-weight: 600; color: #374151; }
+        .form-row input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .form-row input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        button {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #fff;
+            background: #2563eb;
+        }
+        button.secondary { background: #64748b; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .status {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .status.show { display: block; }
+        .status.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
+        .status.success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; }
+        .status.error { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+        .summary {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .summary-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .summary-item .label {
+            display: block;
+            margin-bottom: 6px;
+            color: #64748b;
+            font-size: 12px;
+        }
+        .summary-item .value {
+            word-break: break-all;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .preview-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 360px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+        .preview-box img {
+            max-width: 100%;
+            max-height: 520px;
+            display: none;
+            object-fit: contain;
+        }
+        .preview-placeholder {
+            color: #64748b;
+            text-align: center;
+            line-height: 1.7;
+            padding: 24px;
+        }
+        .tip-list {
+            margin: 0;
+            padding-left: 18px;
+            color: #4b5563;
+            line-height: 1.9;
+        }
+        .tip-list code {
+            background: #eef2ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .logs {
+            margin-top: 18px;
+            padding: 16px;
+            min-height: 220px;
+            max-height: 420px;
+            overflow: auto;
+            border-radius: 12px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .link-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .link-row a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        .link-row a:hover { text-decoration: underline; }
+        @media (max-width: 860px) {
+            .grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="page-title">Icon 上传与展示测试</h1>
+    <p class="page-desc">
+        该页面用于测试 <strong>IconController</strong> 小文件上传与图片展示。<br>
+        图片会上传到 <code>icon</code> bucket，按 <code>{project}/{uniqueFileName}</code> 存储，并返回可直接展示的 URL。
+    </p>
+
+    <div class="grid">
+        <div class="card">
+            <h2>上传测试</h2>
+            <div class="form-row">
+                <label for="baseUrl">接口根路径</label>
+                <input id="baseUrl" type="text" value="http://localhost:8080/api/icon">
+            </div>
+            <div class="form-row">
+                <label for="projectName">Project Name</label>
+                <input id="projectName" type="text" value="demo-project" placeholder="作为 X-Project-Name header 发送">
+            </div>
+            <div class="form-row">
+                <label for="fileInput">图片文件</label>
+                <input id="fileInput" type="file" accept="image/*">
+            </div>
+            <div class="form-row">
+                <label for="objectKeyInput">已有 objectKey</label>
+                <input id="objectKeyInput" type="text" placeholder="例如 demo-project/abc123.png">
+            </div>
+            <div class="btn-row">
+                <button id="uploadBtn" type="button">上传图片</button>
+                <button id="loadBtn" type="button">按 objectKey 预览</button>
+                <button id="clearBtn" class="secondary" type="button">清空结果</button>
+            </div>
+            <div id="statusBox" class="status"></div>
+
+            <div class="summary">
+                <div class="summary-item">
+                    <span class="label">返回 objectKey</span>
+                    <span id="objectKeyValue" class="value">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">返回文件名</span>
+                    <span id="fileNameValue" class="value">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">图片 URL</span>
+                    <span id="urlValue" class="value">-</span>
+                </div>
+            </div>
+
+            <div class="link-row">
+                <a id="previewLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">打开图片新窗口预览</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>图片预览</h2>
+            <div class="preview-box">
+                <div id="previewPlaceholder" class="preview-placeholder">
+                    选择图片并上传后，这里会直接展示返回的图片。<br>
+                    也可以输入已有 <code>objectKey</code> 后点击“按 objectKey 预览”。
+                </div>
+                <img id="previewImage" alt="icon 预览图">
+            </div>
+            <div style="margin-top:16px;">
+                <h2 style="margin-bottom:12px;">说明</h2>
+                <ul class="tip-list">
+                    <li>上传接口：<code>POST /api/icon/upload</code></li>
+                    <li>取 URL 接口：<code>GET /api/icon/url?objectKey=...</code></li>
+                    <li>文件较小，使用普通上传，不走分片上传。</li>
+                    <li>后端会自动重命名文件，避免同名覆盖。</li>
+                    <li>图片 URL 可直接用于前端 <code>&lt;img&gt;</code> 展示。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+        <h2>执行日志</h2>
+        <div id="logBox" class="logs"></div>
+    </div>
+</div>
+
+<script>
+    const els = {
+        baseUrl: document.getElementById("baseUrl"),
+        projectName: document.getElementById("projectName"),
+        fileInput: document.getElementById("fileInput"),
+        objectKeyInput: document.getElementById("objectKeyInput"),
+        uploadBtn: document.getElementById("uploadBtn"),
+        loadBtn: document.getElementById("loadBtn"),
+        clearBtn: document.getElementById("clearBtn"),
+        statusBox: document.getElementById("statusBox"),
+        objectKeyValue: document.getElementById("objectKeyValue"),
+        fileNameValue: document.getElementById("fileNameValue"),
+        urlValue: document.getElementById("urlValue"),
+        previewLink: document.getElementById("previewLink"),
+        previewImage: document.getElementById("previewImage"),
+        previewPlaceholder: document.getElementById("previewPlaceholder"),
+        logBox: document.getElementById("logBox")
+    };
+
+    function initPage() {
+        log("页面已初始化");
+        els.uploadBtn.addEventListener("click", uploadIcon);
+        els.loadBtn.addEventListener("click", loadByObjectKey);
+        els.clearBtn.addEventListener("click", clearResult);
+    }
+
+    function getBaseUrl() {
+        return els.baseUrl.value.trim().replace(/\/+$/, "");
+    }
+
+    function showStatus(type, message) {
+        els.statusBox.className = "status show " + type;
+        els.statusBox.textContent = message;
+    }
+
+    function log(message, data) {
+        const time = new Date().toLocaleTimeString();
+        let line = "[" + time + "] " + message;
+        if (data !== undefined) {
+            line += "\n" + (typeof data === "string" ? data : JSON.stringify(data, null, 2));
+        }
+        els.logBox.textContent += line + "\n\n";
+        els.logBox.scrollTop = els.logBox.scrollHeight;
+    }
+
+    function setPreview(url) {
+        els.previewImage.src = url;
+        els.previewImage.style.display = "block";
+        els.previewPlaceholder.style.display = "none";
+        els.previewLink.href = url;
+        els.previewLink.style.display = "inline";
+    }
+
+    function setResult(data) {
+        const objectKey = data.objectKey || "-";
+        const fileName = data.fileName || "-";
+        const url = data.url || "-";
+
+        els.objectKeyValue.textContent = objectKey;
+        els.fileNameValue.textContent = fileName;
+        els.urlValue.textContent = url;
+        els.objectKeyInput.value = data.objectKey || "";
+
+        if (data.url) {
+            setPreview(data.url);
+        }
+    }
+
+    function clearResult() {
+        els.statusBox.className = "status";
+        els.statusBox.textContent = "";
+        els.objectKeyValue.textContent = "-";
+        els.fileNameValue.textContent = "-";
+        els.urlValue.textContent = "-";
+        els.previewImage.removeAttribute("src");
+        els.previewImage.style.display = "none";
+        els.previewPlaceholder.style.display = "block";
+        els.previewLink.href = "#";
+        els.previewLink.style.display = "none";
+        log("已清空测试结果");
+    }
+
+    async function uploadIcon() {
+        const file = els.fileInput.files && els.fileInput.files[0];
+        if (!file) {
+            showStatus("error", "请先选择图片文件");
+            return;
+        }
+
+        const baseUrl = getBaseUrl();
+        const project = els.projectName.value.trim() || "default";
+        const formData = new FormData();
+        formData.append("file", file);
+
+        els.uploadBtn.disabled = true;
+        showStatus("info", "开始上传图片...");
+        log("开始上传图片", {
+            baseUrl: baseUrl,
+            project: project,
+            fileName: file.name,
+            fileSize: file.size,
+            fileType: file.type
+        });
+
+        try {
+            const response = await fetch(baseUrl + "/upload", {
+                method: "POST",
+                headers: {
+                    "X-Project-Name": project
+                },
+                body: formData
+            });
+            const text = await response.text();
+            const data = tryJson(text);
+
+            if (!response.ok) {
+                throw new Error("上传失败: HTTP " + response.status + " " + text);
+            }
+
+            setResult(data || {});
+            showStatus("success", "图片上传成功，已更新预览");
+            log("上传成功", data);
+        } catch (error) {
+            showStatus("error", error.message || String(error));
+            log("上传失败", error.message || String(error));
+        } finally {
+            els.uploadBtn.disabled = false;
+        }
+    }
+
+    async function loadByObjectKey() {
+        const objectKey = els.objectKeyInput.value.trim();
+        if (!objectKey) {
+            showStatus("error", "请先输入 objectKey");
+            return;
+        }
+
+        const baseUrl = getBaseUrl();
+        showStatus("info", "正在获取图片 URL...");
+        log("按 objectKey 获取图片 URL", { baseUrl: baseUrl, objectKey: objectKey });
+
+        try {
+            const response = await fetch(baseUrl + "/url?objectKey=" + encodeURIComponent(objectKey), {
+                method: "GET"
+            });
+            const text = await response.text();
+            const data = tryJson(text);
+
+            if (!response.ok) {
+                throw new Error("获取 URL 失败: HTTP " + response.status + " " + text);
+            }
+
+            setResult(data || {});
+            showStatus("success", "图片 URL 获取成功，已更新预览");
+            log("获取 URL 成功", data);
+        } catch (error) {
+            showStatus("error", error.message || String(error));
+            log("获取 URL 失败", error.message || String(error));
+        }
+    }
+
+    function tryJson(text) {
+        if (!text) return null;
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    initPage();
+</script>
+</body>
+</html>

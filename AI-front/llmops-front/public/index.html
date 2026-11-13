@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title></title>
+    <link rel="stylesheet" href="loading.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <link rel="stylesheet" href="themes/theme.css">
+    <link rel="stylesheet" id="theme-css">
+    <link rel="stylesheet" href="custom-style/index.css">
+    <noscript>
+      <strong>系统需要运行 JavaScript，请开启 JavaScript 运行权限</strong>
+    </noscript>
+    <div id="app">
+      <div class="site-loading">
+        <div class="spinner">
+          <div class="rect1"></div>
+          <div class="rect2"></div>
+          <div class="rect3"></div>
+          <div class="rect4"></div>
+          <div class="rect5"></div>
+        </div>
+        <p class="tip">页面加载中...</p>
+      </div>
+    </div>
+    <script>
+      // 加载全局配置
+      document.write('<script src="global.config.js?t=' + new Date().getTime() + '"><'+'/script>');
+    </script>
+    <script>
+      // 设置网页title
+      var title = window.globalConfig.headerTitle;
+      if (title) document.title = title;
+    </script>
+    <script>
+      // 引入 icon-font
+      if (window.globalConfig.useIconfont) document.write('<script src="iconfont/iconfont.js"><'+'/script>');
+    </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

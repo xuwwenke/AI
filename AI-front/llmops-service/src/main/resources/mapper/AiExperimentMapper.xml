@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.AiExperimentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.AiExperiment">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="name" property="name" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+        <result column="project_id" property="projectId" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="status" property="status" />
+        <result column="model_name" property="modelName" />
+        <result column="config" property="config" />
+        <result column="desc" property="desc" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, name, created_by_fk, changed_by_fk, project_id, start_time, end_time, status, model_name, config, `desc`
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.entity.AiExperiment">
+        SELECT
+        ae.*,
+        a1.nickname as creator,
+        a2.nickname as modifier
+        FROM ai_experiment ae
+        LEFT JOIN ab_user a1 ON ae.created_by_fk = a1.id
+        LEFT JOIN ab_user a2 ON ae.changed_by_fk = a2.id
+        <where>
+            <if test="projectId != null">
+                AND ae.project_id = #{projectId}
+            </if>
+            <if test="status != null">
+                AND ae.status = #{status}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND ae.model_name LIKE CONCAT('%', #{modelName}, '%')
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a1.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+        </where>
+        ORDER BY ae.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM ai_experiment ae
+        LEFT JOIN ab_user a1 ON ae.created_by_fk = a1.id
+        <where>
+            <if test="projectId != null">
+                AND ae.project_id = #{projectId}
+            </if>
+            <if test="status != null">
+                AND ae.status = #{status}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND ae.model_name LIKE CONCAT('%', #{modelName}, '%')
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a1.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 开始实验：状态从 0(未开始) 或 4(已暂停) 变为 1(运行中) -->
+    <update id="startExperiment">
+        UPDATE ai_experiment
+        SET status = 1, changed_on = NOW()
+        WHERE id = #{id} AND status IN (0, 4)
+    </update>
+
+    <!-- 暂停实验：状态从 0(未开始) 或 1(运行中) 变为 4(已暂停) -->
+    <update id="pauseExperiment">
+        UPDATE ai_experiment
+        SET status = 4, changed_on = NOW()
+        WHERE id = #{id} AND status IN (0, 1)
+    </update>
+
+    <!-- 结束实验：状态从 0(未开始)、1(运行中) 或 4(已暂停) 变为 2(已完成) -->
+    <update id="finishExperiment">
+        UPDATE ai_experiment
+        SET status = 2, end_time = NOW(), changed_on = NOW()
+        WHERE id = #{id} AND status IN (0, 1, 4)
+    </update>
+
+    <!-- 失败实验：状态从 0(未开始)、1(运行中) 或 4(已暂停) 变为 3(失败) -->
+    <update id="failExperiment">
+        UPDATE ai_experiment
+        SET status = 3, end_time = NOW(), changed_on = NOW()
+        WHERE id = #{id} AND status IN (0, 1, 4)
+    </update>
+
+</mapper>

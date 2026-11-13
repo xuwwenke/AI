@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.file.mapper.UploadTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.file.entity.UploadTask">
+        <id column="id" property="id" />
+        <result column="object_key" property="objectKey" />
+        <result column="creator_id" property="creatorId" />
+        <result column="bucket" property="bucket" />
+        <result column="file_name" property="fileName" />
+        <result column="file_size" property="fileSize" />
+        <result column="mime_type" property="mimeType" />
+        <result column="upload_id" property="uploadId" />
+        <result column="total_parts" property="totalParts" />
+        <result column="uploaded_parts" property="uploadedParts" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="complete_time" property="completeTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, object_key, creator_id, bucket, file_name, file_size, mime_type, upload_id, total_parts, uploaded_parts, status, create_time, update_time, complete_time
+    </sql>
+
+</mapper>

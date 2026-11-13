@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.ImagesMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Images">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="project_id" property="projectId" />
+        <result column="name" property="name" />
+        <result column="describe" property="describe" />
+        <result column="repository_id" property="repositoryId" />
+        <result column="entrypoint" property="entrypoint" />
+        <result column="dockerfile" property="dockerfile" />
+        <result column="gitpath" property="gitpath" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, project_id, name, `describe`, repository_id, entrypoint, dockerfile, gitpath, created_by_fk, changed_by_fk
+    </sql>
+
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.entity.Images">
+        SELECT
+        i.*, 
+        a1.nickname as creatorName, 
+        a2.nickname as modifierName
+        FROM images i
+        LEFT JOIN ab_user a1 ON i.created_by_fk = a1.id
+        LEFT JOIN ab_user a2 ON i.changed_by_fk = a2.id
+        <where>
+            <choose>
+                <when test="projectId != null">
+                    AND i.biz_project_id IN (1, #{projectId})
+                </when>
+                <otherwise>
+                    AND i.biz_project_id = 1
+                </otherwise>
+            </choose>
+            <if test="name != null and name != ''">
+                AND i.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a1.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+            <if test="describe != null and describe != ''">
+                AND i.`describe` LIKE CONCAT('%', #{describe}, '%')
+            </if>
+        </where>
+        ORDER BY i.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM images i
+        LEFT JOIN ab_user a1 ON i.created_by_fk = a1.id
+        LEFT JOIN ab_user a2 ON i.changed_by_fk = a2.id
+        <where>
+            <choose>
+                <when test="projectId != null">
+                    AND i.biz_project_id IN (1, #{projectId})
+                </when>
+                <otherwise>
+                    AND i.biz_project_id = 1
+                </otherwise>
+            </choose>
+            <if test="name != null and name != ''">
+                AND i.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="creator != null and creator != ''">
+                AND a1.nickname LIKE CONCAT('%', #{creator}, '%')
+            </if>
+            <if test="describe != null and describe != ''">
+                AND i.`describe` LIKE CONCAT('%', #{describe}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getById" resultType="com.eversec.llmops.service.entity.Images">
+        SELECT
+        i.*, 
+        a1.nickname as creatorName, 
+        a2.nickname as modifierName
+        FROM images i
+        LEFT JOIN ab_user a1 ON i.created_by_fk = a1.id
+        LEFT JOIN ab_user a2 ON i.changed_by_fk = a2.id
+        WHERE i.id = #{id}
+    </select>
+
+    <select id="getImageNamesByNamespace" resultType="com.eversec.llmops.service.dto.ImageNameDTO">
+        SELECT i.id, i.name
+        FROM images i
+        LEFT JOIN project p ON i.project_id = p.id
+        WHERE p.name = #{namespace}
+        ORDER BY i.id DESC
+    </select>
+
+
+
+    <select id="getImageNamesToSelect" resultType="com.eversec.llmops.service.dto.ImageNameDTO">
+        SELECT i.id, i.name
+        FROM images i
+        <where>
+            <choose>
+                <when test="projectId != null">
+                    AND i.biz_project_id IN (1, #{projectId})
+                </when>
+                <otherwise>
+                    AND i.biz_project_id = 1
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY i.id DESC
+    </select>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.ModelMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Model">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="name" property="name" />
+        <result column="version" property="version" />
+        <result column="describe" property="describe" />
+        <result column="path" property="path" />
+        <result column="download_url" property="downloadUrl" />
+        <result column="project_id" property="projectId" />
+        <result column="pipeline_id" property="pipelineId" />
+        <result column="run_id" property="runId" />
+        <result column="run_time" property="runTime" />
+        <result column="framework" property="framework" />
+        <result column="metrics" property="metrics" />
+        <result column="md5" property="md5" />
+        <result column="api_type" property="apiType" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+        <result column="expand" property="expand" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, name, version, `describe`, path, download_url, project_id, pipeline_id, run_id, run_time, framework, metrics, md5, api_type, created_by_fk, changed_by_fk, expand
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.entity.Model">
+        SELECT
+        m.*
+        FROM model m
+        LEFT JOIN project p ON m.project_id = p.id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND p.name = #{namespace}
+            </if>
+            <if test="name != null and name != ''">
+                AND m.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="version != null and version != ''">
+                AND m.version LIKE CONCAT('%', #{version}, '%')
+            </if>
+            <if test="framework != null and framework != ''">
+                AND m.framework LIKE CONCAT('%', #{framework}, '%')
+            </if>
+            <if test="path != null and path != ''">
+                AND m.path LIKE CONCAT('%', #{path}, '%')
+            </if>
+        </where>
+        ORDER BY m.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM model m
+        LEFT JOIN project p ON m.project_id = p.id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND p.name = #{namespace}
+            </if>
+            <if test="name != null and name != ''">
+                AND m.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="version != null and version != ''">
+                AND m.version LIKE CONCAT('%', #{version}, '%')
+            </if>
+            <if test="framework != null and framework != ''">
+                AND m.framework LIKE CONCAT('%', #{framework}, '%')
+            </if>
+            <if test="path != null and path != ''">
+                AND m.path LIKE CONCAT('%', #{path}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getStats" resultType="com.eversec.llmops.service.dto.ModelStatsDTO">
+        SELECT
+        COUNT(*) AS totalCount,
+        COUNT(DISTINCT m.name) AS typeCount
+        FROM model m
+        LEFT JOIN project p ON m.project_id = p.id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND p.name = #{namespace}
+            </if>
+        </where>
+    </select>
+
+    <select id="getById" resultType="com.eversec.llmops.service.entity.Model">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM model
+        WHERE id = #{id}
+    </select>
+</mapper>

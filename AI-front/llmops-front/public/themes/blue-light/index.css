@@ -1,0 +1,162 @@
+:root {
+  /* 网站框架 */
+  --site-header-bg: #184FCF;
+  --site-header-txt: white;
+  --site-main-content-bg: white;
+  --site-footer-bg: #184FCF;
+  --site-footer-txt: #333;
+  --site-menu-bg: white;
+  --site-menu-txt: #595F7B;
+  --site-menu-hover-bg: #EBEFFC;
+  --site-menu-hover-txt: #114AD1;
+  --site-menu-active-bg: #184FCF;
+  --site-menu-active-txt: white;
+  --site-menu-assist-txt: #ccd0d8;
+  --site-sub-menu-bg: white;
+  --site-sub-menu2-bg: white;
+  --site-tabs-bg: #1946ad;
+  --site-tabs-txt: white;
+  --site-tabs-hover-bg: #0e4cdb;
+  --site-tabs-hover-txt: white;
+  --site-tabs-active-bg: white;
+  --site-tabs-active-txt: #333;
+  /* 子元素：卡片，表格，菜单等 */
+  --sub-bg: rgba(255, 255, 255, 0.9);
+  --sub-txt: #333;
+  --sub-border: #dcdfe6;
+  --sub-hover-bg: #f1f6ff;
+  --sub-hover-txt: #333;
+  --sub-active-bg: #d3e8ff;
+  --sub-active-txt: #333;
+  /* 弹窗 */
+  --pop-bg: white;
+  --pop-txt: #333;
+  --pop-border: #E4E7ED;
+  --pop-hover-bg: #ecf5ff;
+  --pop-hover-txt: #436BD9;
+  --pop-hover-border: transparent;
+  --pop-active-bg: #ecf5ff;
+  --pop-active-txt: #114AD1;
+  --pop-active-border: transparent;
+  /* 对话框 */
+  --dialog-bg: white;
+  --dialog-txt: #333;
+  /* 辅助 */
+  --assist-bg: #fff;
+  --assist-txt: #808191;
+  --assist-border: #E1E3ED;
+  /* 日期范围 */
+  --range-bg: #f2f6fc;
+  /* 主要色 */
+  --default-bg: white;
+  --default-txt: #606266;
+  --default-border: #dcdfe6;
+  --default-hover-bg: #ecf5ff;
+  --default-hover-txt: #184FCF;
+  --default-hover-border: #c6e2ff;
+  --default-active-bg: white;
+  --default-active-txt: #3a8ee6;
+  --default-active-border: #3a8ee6;
+  --default-disabled-bg: #f5f7fa;
+  --default-disabled-txt: #9c9c9c;
+  --default-disabled-border: #ebeef5;
+
+  --primary-bg: #184FCF;
+  --primary-txt: white;
+  --primary-border: #184FCF;
+  --primary-hover-bg: #436BD9;
+  --primary-hover-txt: white;
+  --primary-hover-border: #436BD9;
+  --primary-active-bg: #3a8ee6;
+  --primary-active-txt: white;
+  --primary-active-border: #3a8ee6;
+  --primary-disabled-bg: #E1E3ED;
+  --primary-disabled-txt: #B0B0BC;
+  --primary-disabled-border: #E1E3ED;
+}
+
+body {
+  color: #3F405D;
+  font-size: 14px;
+}
+
+.site-top {
+  font-size: 14px;
+}
+.site-top > h1 > .home-link > .logo {
+  margin-right: 10px;
+}
+.site-top .app-select .app-btn {
+  height: 40px;
+  line-height: 40px;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+.site-top .app-select .app-btn:hover {
+  color: #fff;
+  background: rgba(45, 72, 161, 0.5);
+}
+.site-top .app-select .app-btn.selected {
+  color: #fff;
+  background: #24409F;
+  box-shadow: 0px 6px 6px rgba(14,39,180,0.2);
+}
+
+.site-aside {
+  padding-top: 18px;
+}
+.site-aside .site-menu-custom > ul > li {
+  margin-bottom: 10px;
+  height: 48px;
+  line-height: 48px;
+}
+.site-aside .site-menu-custom > ul > li.active {
+  box-shadow: 0px 6px 10px rgba(67,107,217,0.3);
+}
+
+.site-main {
+  padding: 24px !important;
+  background: #E7EBEE;
+}
+
+.el-pagination {
+  text-align: right !important;
+}
+.el-pagination li,
+.el-pagination li.active + li,
+.el-pagination .btn-prev,
+.el-pagination .btn-next {
+  line-height: 26px;
+  min-width: 28px;
+  margin: 0 5px;
+  border-radius: 3px;
+  border: 1px solid #EEEDF0;
+  color: #808191;
+  font-weight: 500;
+}
+.el-pagination .btn-prev,
+.el-pagination .btn-next {
+  padding: 0;
+}
+.el-pagination li.active {
+  background: var(--primary-bg);
+  color: #fff;
+}
+
+.el-table tr {
+  height: 48px;
+}
+.el-table--border {
+  border: none;
+}
+.el-table--border::after, .el-table--group::after, .el-table::before {
+  background: none;
+}
+.el-table tr th.el-table__cell {
+  background: #F7F8FC;
+  color: #808191 !important;
+}
+.el-table tr td.el-table__cell {
+  border-bottom: 1px solid #E1E3ED;
+}

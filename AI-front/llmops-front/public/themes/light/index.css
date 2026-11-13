@@ -1,0 +1,232 @@
+:root {
+  /* 网站框架 */
+  --site-header-bg: white;
+  --site-header-txt: #333;
+  --site-main-content-bg: transparent;
+  --site-footer-bg: white;
+  --site-footer-txt: #333;
+  --site-menu-bg: #ffffff;
+  --site-menu-txt: #333333;
+  --site-menu-hover-bg: #46a4fb;
+  --site-menu-hover-txt: white;
+  --site-menu-active-bg: #1487f2;
+  --site-menu-active-txt: white;
+  --site-menu-assist-txt: #c7c7c7;
+  --site-sub-menu-bg: white;
+  --site-sub-menu2-bg: #F1F2F6;
+  --site-tabs-bg: #acacac;
+  --site-tabs-txt: white;
+  --site-tabs-hover-bg: #999;
+  --site-tabs-hover-txt: white;
+  --site-tabs-active-bg: #f1f2f6;
+  --site-tabs-active-txt: #333;
+  /* 子元素：卡片，表格，菜单等 */
+  --sub-bg: rgba(255, 255, 255, 1);
+  --sub-txt: #333333;
+  --sub-border: #dcdfe6;
+  --sub-hover-bg: #e8f2fd;
+  --sub-hover-txt: #333;
+  --sub-active-bg: #d3e8ff;
+  --sub-active-txt: #333;
+  /* 弹窗 */
+  --pop-bg: white;
+  --pop-txt: #333;
+  --pop-border: #E4E7ED;
+  --pop-hover-bg: #ecf5ff;
+  --pop-hover-txt: #66b1ff;
+  --pop-hover-border: transparent;
+  --pop-active-bg: #ecf5ff;
+  --pop-active-txt: #00b7ff;
+  --pop-active-border: transparent;
+  /* 对话框 */
+  --dialog-bg: white;
+  --dialog-txt: #333;
+  /* 辅助 */
+  --assist-bg: #f8fcff;
+  --assist-txt: #949494;
+  --assist-border: #ebeef5;
+  /* 日期范围 */
+  --range-bg: #f2f6fc;
+  /* 主要色 */
+  --default-bg: white;
+  --default-txt: #606266;
+  --default-border: #dcdfe6;
+  --default-hover-bg: #ecf5ff;
+  --default-hover-txt: #409eff;
+  --default-hover-border: #c6e2ff;
+  --default-active-bg: white;
+  --default-active-txt: #3a8ee6;
+  --default-active-border: #3a8ee6;
+  --default-disabled-bg: #f5f7fa;
+  --default-disabled-txt: #9c9c9c;
+  --default-disabled-border: #ebeef5;
+  --primary-bg: #409eff;
+  --primary-txt: white;
+  --primary-border: #409eff;
+  --primary-hover-bg: #66b1ff;
+  --primary-hover-txt: white;
+  --primary-hover-border: #66b1ff;
+  --primary-active-bg: #3a8ee6;
+  --primary-active-txt: white;
+  --primary-active-border: #3a8ee6;
+  --primary-disabled-bg: #89c4ff;
+  --primary-disabled-txt: white;
+  --primary-disabled-border: #89c4ff;
+}
+
+body {
+  color: #333;
+  background-color: #f1f2f6;
+}
+
+.site-header .title{
+  color: #1487f2;
+}
+
+.site-menu:not(.el-menu--horizontal) .el-menu-item::before {
+  display: none;
+}
+/* .site-menu:not(.el-menu--horizontal) .el-submenu__title,
+.site-menu:not(.el-menu--horizontal) .el-menu-item,
+.site-menu-custom > ul > li {
+  margin-top: 6px;
+}
+.site-menu:not(.el-menu--horizontal),
+.site-menu-custom > ul {
+  padding-bottom: 6px;
+} */
+.site-menu.el-menu--horizontal > .el-menu-item.is-active,
+.site-menu.el-menu--horizontal > .el-submenu.is-active > .el-submenu__title {
+  border-bottom: none;
+}
+
+.el-card, .el-tabs {
+  border: none;
+  border-radius: 8px !important;
+}
+.el-card.is-always-shadow,
+.el-card.is-hover-shadow:focus,
+.el-card.is-hover-shadow:hover,
+.el-tabs--border-card {
+  box-shadow: none !important;
+}
+
+.el-tabs .el-tabs__header.is-top,
+.el-tabs .el-tabs__nav-wrap.is-top {
+  border-radius: 8px 8px 0 0;
+}
+
+.el-table {
+  font-size: 13px;
+  font-family: "SourceHanSansCN", "MicrosoftYaHei", "Avenir", Helvetica;
+}
+.el-table tr {
+  height: 44px;
+}
+.el-table.el-table--striped .el-table__body tr.el-table__row--striped td,
+.el-table .has-gutter th,
+.el-table__fixed-header-wrapper tr th.el-table__cell {
+  background: var(--assist-bg);
+}
+
+.el-button {
+  font-family: "SourceHanSansCN", "MicrosoftYaHei", "Avenir", Helvetica;
+}
+
+.el-progress .el-progress-bar__outer {
+  height: 10px !important;
+}
+.el-progress .el-progress__text {
+  font-size: 16px !important;
+  padding-left: 5px;
+}
+
+.el-dialog .el-dialog__header .el-dialog__title {
+  font-family: "SourceHanSansCN-Bold";
+  font-size: 18px;
+  color: #000000;
+}
+
+/* .page-title {
+  margin-bottom: 10px;
+} */
+.page-title hr {
+  border-bottom: none;
+}
+
+/*分页样式*/
+.el-pagination {
+  height: 46px !important;
+  text-align: right;
+}
+.paginationBox .leftPage {
+  height: 46px !important;
+  padding: 2px 5px;
+}
+.paginationBox .leftPage,
+.el-pagination .el-pagination__total,
+.el-pagination .pageSlot,
+.el-pagination .el-pagination__jump,
+.el-pagination .el-pagination__total {
+  font-size: 14px !important;
+  font-family: "SourceHanSansCN", "MicrosoftYaHei", "Avenir", Helvetica;
+  color: #999999 !important;
+  line-height: 34px !important;
+  font-weight: normal;
+}
+.el-pagination .el-pagination__sizes .el-input {
+  height: 34px !important;
+}
+.el-pagination .el-pagination__sizes,
+.el-pagination .el-pagination__sizes .el-input .el-input__inner,
+.el-pagination .el-pagination__sizes .el-input.is-in-pagination,
+.el-pagination .el-pagination__jump,
+.el-pagination .btn-prev,
+.el-pagination .btn-next,
+.el-pagination .el-pagination__jump .el-input__inner,
+.el-pagination .el-pagination__editor {
+  height: 34px !important;
+  color: #999999 !important;
+  font-size: 14px !important;
+  font-family: "SourceHanSansCN", "MicrosoftYaHei", "Avenir", Helvetica;
+}
+.el-pagination .btn-prev,
+.el-pagination .btn-next {
+  width: 34px !important;
+  font-size: 14px !important;
+}
+.el-pagination .el-pager li,
+.el-pagination .el-pagination__jump .el-input__inner {
+  font-size: 14px !important;
+  width: 40px !important;
+  height: 34px !important;
+  line-height: 32px !important;
+}
+
+@font-face {
+  font-family: "SourceHanSansCN-Bold";
+  src: url("./fonts/SourceHanSansCN-Bold.otf");
+  font-size: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SourceHanSansCN";
+  src: url("./fonts/SourceHanSansCN-Normal.otf");
+  font-size: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SourceHanSansCN-Medium";
+  src: url("./fonts/SourceHanSansCN-Medium.otf");
+  font-size: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SourceHanSansCN-Regular";
+  src: url("./fonts/SourceHanSansCN-Regular.otf");
+  font-size: normal;
+  font-weight: normal;
+}

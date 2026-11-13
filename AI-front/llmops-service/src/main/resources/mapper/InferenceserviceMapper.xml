@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.InferenceserviceMapper">
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Inferenceservice">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="project_id" property="projectId" />
+        <result column="name" property="name" />
+        <result column="label" property="label" />
+        <result column="service_type" property="serviceType" />
+        <result column="model_name" property="modelName" />
+        <result column="model_version" property="modelVersion" />
+        <result column="model_path" property="modelPath" />
+        <result column="model_type" property="modelType" />
+        <result column="model_input" property="modelInput" />
+        <result column="model_output" property="modelOutput" />
+        <result column="model_status" property="modelStatus" />
+        <result column="transformer" property="transformer" />
+        <result column="images" property="images" />
+        <result column="working_dir" property="workingDir" />
+        <result column="command" property="command" />
+        <result column="args" property="args" />
+        <result column="env" property="env" />
+        <result column="volume_mount" property="volumeMount" />
+        <result column="node_selector" property="nodeSelector" />
+        <result column="min_replicas" property="minReplicas" />
+        <result column="max_replicas" property="maxReplicas" />
+        <result column="hpa" property="hpa" />
+        <result column="metrics" property="metrics" />
+        <result column="health" property="health" />
+        <result column="sidecar" property="sidecar" />
+        <result column="ports" property="ports" />
+        <result column="resource_memory" property="resourceMemory" />
+        <result column="resource_cpu" property="resourceCpu" />
+        <result column="resource_gpu" property="resourceGpu" />
+        <result column="deploy_time" property="deployTime" />
+        <result column="host" property="host" />
+        <result column="expand" property="expand" />
+        <result column="canary" property="canary" />
+        <result column="shadow" property="shadow" />
+        <result column="run_id" property="runId" />
+        <result column="run_time" property="runTime" />
+        <result column="deploy_history" property="deployHistory" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+        <result column="inference_config" property="inferenceConfig" />
+        <result column="priority" property="priority" />
+        <result column="cronhpa" property="cronhpa" />
+        <result column="namespace" property="namespace" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, project_id, name, label, service_type, model_name, model_version, model_path, model_type, model_input, model_output, model_status, transformer, images, working_dir, command, args, env, volume_mount, node_selector, min_replicas, max_replicas, hpa, metrics, health, sidecar, ports, resource_memory, resource_cpu, resource_gpu, deploy_time, host, expand, canary, shadow, run_id, run_time, deploy_history, created_by_fk, changed_by_fk, inference_config, priority, cronhpa, namespace
+    </sql>
+
+    <!-- 自定义分页查询 -->
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.entity.Inferenceservice">
+        SELECT
+        i.*,
+        pm.cluster_name as clusterName
+        FROM inferenceservice i
+        LEFT JOIN pro_manager pm ON i.project_id = pm.project_id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND pm.pro_name = #{namespace}
+            </if>
+            <if test="name != null and name != ''">
+                AND i.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="label != null and label != ''">
+                AND i.label LIKE CONCAT('%', #{label}, '%')
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND i.model_name LIKE CONCAT('%', #{modelName}, '%')
+            </if>
+            <if test="modelVersion != null and modelVersion != ''">
+                AND i.model_version LIKE CONCAT('%', #{modelVersion}, '%')
+            </if>
+            <if test="modelUrl != null and modelUrl != ''">
+                AND i.model_path LIKE CONCAT('%', #{modelUrl}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND i.model_status = #{status}
+            </if>
+            <if test="gpu != null and gpu != ''">
+                <choose>
+                    <when test="gpu == 'yes'">
+                        AND i.resource_gpu IS NOT NULL AND i.resource_gpu != '0'
+                    </when>
+                    <when test="gpu == 'no'">
+                        AND (i.resource_gpu IS NULL OR i.resource_gpu = '0')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        ORDER BY i.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取总数 -->
+    <select id="customGetTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM inferenceservice i
+        LEFT JOIN pro_manager pm ON i.project_id = pm.project_id
+        <where>
+            <if test="namespace != null and namespace != ''">
+                AND pm.pro_name = #{namespace}
+            </if>
+            <if test="name != null and name != ''">
+                AND i.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="label != null and label != ''">
+                AND i.label LIKE CONCAT('%', #{label}, '%')
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND i.model_name LIKE CONCAT('%', #{modelName}, '%')
+            </if>
+            <if test="modelVersion != null and modelVersion != ''">
+                AND i.model_version LIKE CONCAT('%', #{modelVersion}, '%')
+            </if>
+            <if test="modelUrl != null and modelUrl != ''">
+                AND i.model_path LIKE CONCAT('%', #{modelUrl}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND i.model_status = #{status}
+            </if>
+            <if test="gpu != null and gpu != ''">
+                <choose>
+                    <when test="gpu == 'yes'">
+                        AND i.resource_gpu IS NOT NULL AND i.resource_gpu != ''
+                    </when>
+                    <when test="gpu == 'no'">
+                        AND (i.resource_gpu IS NULL OR i.resource_gpu = '')
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <!-- 通过id查询，关联pro_manager信息 -->
+    <select id="selectByIdWithProManager" resultType="com.eversec.llmops.service.entity.Inferenceservice">
+        SELECT
+        i.*,
+        pm.cluster_name as clusterName,
+        pm.pro_name as proName,
+        pm.desc_zh as descZh,
+        pm.group_name as groupName
+        FROM inferenceservice i
+        LEFT JOIN pro_manager pm ON i.project_id = pm.project_id
+        WHERE i.id = #{id}
+    </select>
+
+    <!-- 通过projectId查询model_status为online的inferenceservice列表 -->
+    <select id="selectOnlineByProjectId" resultType="com.eversec.llmops.service.entity.Inferenceservice">
+        SELECT
+        i.*,
+        pm.cluster_name as clusterName,
+        pm.pro_name as proName
+        FROM inferenceservice i
+        LEFT JOIN pro_manager pm ON i.project_id = pm.project_id
+        WHERE i.project_id = #{projectId}
+        AND i.model_status = 'online'
+    </select>
+
+    <!-- 通过projectId查询总数 -->
+    <select id="selectTotalCountByProjectId" resultType="int">
+        SELECT COUNT(*)
+        FROM inferenceservice i
+        WHERE i.project_id = #{projectId}
+    </select>
+
+    <select id="selectOnlineCountByProjectId" resultType="int">
+        SELECT COUNT(*)
+        FROM inferenceservice i
+        WHERE i.project_id = #{projectId}
+        AND i.model_status = 'online'
+    </select>
+
+    <!-- 通过projectId查询本月新增数 -->
+    <select id="selectThisMonthCountByProjectId" resultType="int">
+        SELECT COUNT(*)
+        FROM inferenceservice i
+        WHERE i.project_id = #{projectId}
+        AND DATE_FORMAT(i.created_on, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+    </select>
+
+    <!-- 通过projectId查询所有inferenceservice -->
+    <select id="selectAllByProjectId" resultType="com.eversec.llmops.service.entity.Inferenceservice">
+        SELECT
+        i.*,
+        pm.cluster_name as clusterName,
+        pm.pro_name as proName
+        FROM inferenceservice i
+        LEFT JOIN pro_manager pm ON i.project_id = pm.project_id
+        WHERE i.project_id = #{projectId}
+    </select>
+</mapper>

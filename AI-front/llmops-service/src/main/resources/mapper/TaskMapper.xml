@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eversec.llmops.service.mapper.TaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eversec.llmops.service.entity.Task">
+        <id column="id" property="id" />
+        <result column="created_on" property="createdOn" />
+        <result column="changed_on" property="changedOn" />
+        <result column="name" property="name" />
+        <result column="label" property="label" />
+        <result column="job_template_id" property="jobTemplateId" />
+        <result column="pipeline_id" property="pipelineId" />
+        <result column="working_dir" property="workingDir" />
+        <result column="command" property="command" />
+        <result column="overwrite_entrypoint" property="overwriteEntrypoint" />
+        <result column="args" property="args" />
+        <result column="volume_mount" property="volumeMount" />
+        <result column="node_selector" property="nodeSelector" />
+        <result column="resource_memory" property="resourceMemory" />
+        <result column="resource_cpu" property="resourceCpu" />
+        <result column="resource_gpu" property="resourceGpu" />
+        <result column="timeout" property="timeout" />
+        <result column="retry" property="retry" />
+        <result column="outputs" property="outputs" />
+        <result column="monitoring" property="monitoring" />
+        <result column="expand" property="expand" />
+        <result column="created_by_fk" property="createdByFk" />
+        <result column="changed_by_fk" property="changedByFk" />
+        <result column="skip" property="skip" />
+        <result column="resource_rdma" property="resourceRdma" />
+        <result column="namespace" property="namespace" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_on, changed_on, id, name, label, job_template_id, pipeline_id, working_dir, command, overwrite_entrypoint, args, volume_mount, node_selector, resource_memory, resource_cpu, resource_gpu, timeout, retry, outputs, monitoring, expand, created_by_fk, changed_by_fk, skip, resource_rdma, namespace
+    </sql>
+
+    <select id="customGetPageList" resultType="com.eversec.llmops.service.dto.TaskDTO">
+        SELECT t.id, t.name, t.label, j.name as jobTemplateName, p.name as pipelineName, a.username as creator, DATE_FORMAT(t.changed_on, '%Y-%m-%d %H:%i:%s') as modified, t.expand
+        FROM task t
+        LEFT JOIN job_template j ON t.job_template_id = j.id
+        LEFT JOIN pipeline p ON t.pipeline_id = p.id
+        LEFT JOIN ab_user a ON t.created_by_fk = a.id
+        ORDER BY t.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="customGetTotalCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM task
+    </select>
+
+    <select id="getTasksByPipelineId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM task
+        WHERE pipeline_id = #{pipelineId}
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getTasksCountByPipelineId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM task WHERE pipeline_id = #{pipelineId}
+    </select>
+
+    <select id="getTaskDetailsByPipelineId" resultType="com.eversec.llmops.service.dto.TaskDetailDTO">
+        SELECT t.created_on, t.changed_on, t.id, t.name, t.label, t.job_template_id, t.pipeline_id, 
+               t.working_dir, t.command, t.overwrite_entrypoint, t.args, t.volume_mount, 
+               t.node_selector, t.resource_memory, t.resource_cpu, t.resource_gpu, t.timeout, 
+               t.retry, t.outputs, t.monitoring, t.expand, t.created_by_fk, t.changed_by_fk, 
+               t.skip, t.resource_rdma, t.namespace,
+               a1.nickname as creator,
+               a2.nickname as modifier
+        FROM task t
+        LEFT JOIN ab_user a1 ON t.created_by_fk = a1.id
+        LEFT JOIN ab_user a2 ON t.changed_by_fk = a2.id
+        WHERE t.pipeline_id = #{pipelineId}
+        ORDER BY t.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+</mapper>
