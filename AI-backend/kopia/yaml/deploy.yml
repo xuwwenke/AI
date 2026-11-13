@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pvcviewer-api
+  namespace: kubeflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pvcviewer-api
+  template:
+    metadata:
+      labels:
+        app: pvcviewer-api
+    spec:
+      serviceAccountName: pvcviewer-api
+
+      containers:
+      - name: api
+
+        image: docker-registry:81/harbor-ailabx/pvcservice:v0.0.1
+
+        imagePullPolicy: Always
+        env:
+        - name: NODE_IP
+          value: "192.168.224.251"
+        - name: MINIO_ENDPOINT
+          value: "minio.kubeflow.svc.cluster.local:9000"
+        - name: MYSQL_USER
+          value: "root"
+        - name: MYSQL_PASSWORD
+          value: "admin"
+        - name: MYSQL_HOST
+          value: "mysql-service.infra.svc.cluster.local"
+        - name: KOPIA_PASSWORD
+          value: "KopiaRepo@2026"
+        - name: AWS_ACCESS_KEY_ID
+          value: "minio"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "minio123"
+
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pvcviewer-api
+  namespace: kubeflow
+spec:
+  type: NodePort
+
+  selector:
+    app: pvcviewer-api
+
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30080
